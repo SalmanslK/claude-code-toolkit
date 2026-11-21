@@ -43,8 +43,8 @@ integration and debugging, project manager, React front end, tester. Maintained 
 
 | Folder | What | Maintained in |
 |---|---|---|
-| `book/skills/`, `book/agents/` | The book plugin's 20 skills (`/book:flow`, `/book:self-review`, `/book:ship`, …) and its 2 agents — v0.3.0 | [book-plugin](https://github.com/SalmanslK/book-plugin) |
-| `book/packs/fe-guides/`, `book/packs/deploy/` | The packs' skills: `/check-guides`, `/publish-guides`, `/release-notes`, `/deploy` — boilerplate v1.3.1 | [book-boilerplate](https://github.com/SalmanslK/book-boilerplate) |
+| `book/skills/`, `book/agents/` | The book plugin's 21 skills (`/book:flow`, `/book:self-review`, `/book:check-permissions`, …) and its 2 agents — v0.4.0 | [book-plugin](https://github.com/SalmanslK/book-plugin) |
+| `book/packs/fe-guides/`, `book/packs/deploy/` | The packs' skills: `/check-guides`, `/publish-guides`, `/release-notes`, `/deploy` — boilerplate v1.3.2 | [book-boilerplate](https://github.com/SalmanslK/book-boilerplate) |
 | `factory/` | The Factory skill, which builds a new Book | [ai-factory-kit](https://github.com/SalmanslK/ai-factory-kit) |
 
 Change them there, not here, or the next copy overwrites the change. To use them, install the plugin

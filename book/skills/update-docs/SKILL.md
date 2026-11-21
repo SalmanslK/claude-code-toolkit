@@ -202,4 +202,4 @@ cannot tell you the answer, say that it cannot.
 - An FE guide changed: `/publish-guides`, so the front end's Drive copy matches.
 - Edits on a `chore/docs-<slug>` branch: its pull request opens only when the person asks
   ([CLAUDE.md, *Git*](CLAUDE.md#git)).
-- **In a flow** (`/book:flow`): `finish-feature` → `/publish-guides`; `docs-health` → `/book:trim`.
+- **In a flow** (`/book:flow`): `finish-feature` → `/publish-guides`; `docs-health` → `/book:check-permissions`.

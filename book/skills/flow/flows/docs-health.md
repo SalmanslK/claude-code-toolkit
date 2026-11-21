@@ -8,8 +8,9 @@
 1. `/book:check-consistency` — docs against docs.
 2. `/book:check-docs` — docs against code; reports.
 3. `/book:update-docs` — where the code is trusted; applies.
-4. `/book:trim`.
-5. `/check-guides`.
+4. `/book:check-permissions all` — the FSD's role rules against authorization §2 and the code; reports.
+5. `/book:trim`.
+6. `/check-guides`.
 
 ## Loops
 

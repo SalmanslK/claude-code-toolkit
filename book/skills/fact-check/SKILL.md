@@ -215,4 +215,4 @@ while any material row is `MISSING`, `CONTRADICTED`, `UNTRACED` or
   never a guess in the plan.
 - **`UNVERIFIED`:** name what could not be checked, and run the audit again once it can be.
 - **The matrix changed:** it lands through a pull request, like any other doc.
-- **In a flow** (`/book:flow`): `new-fsd-revision` → `/check-guides`; `finish-feature` → `/check-guides`; `spec-says-x` → `/book:raise`; `qa-build` → `/book:check-docs`.
+- **In a flow** (`/book:flow`): `new-fsd-revision` → `/check-guides`; `finish-feature` → `/check-guides`; `spec-says-x` → `/book:raise`; `qa-build` → `/book:check-permissions`.

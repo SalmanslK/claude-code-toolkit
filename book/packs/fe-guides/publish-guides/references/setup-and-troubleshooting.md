@@ -22,7 +22,7 @@ rclone config create gdrive drive scope drive > $null
 # Proves the remote can see the folder. Expect one line per Doc. The folder id is
 # [fe_guides] drive_folder_id in devtools/factory/factory.toml, as the script reads it;
 # the flags are the ones the script uses.
-$folder = python devtools/factory/factory.py config fe_guides.drive_folder_id
+$folder = python devtools/book.py config fe_guides.drive_folder_id
 rclone lsjson gdrive: --drive-root-folder-id $folder --drive-export-formats md
 ```
 

@@ -9,8 +9,8 @@
 2. `/book:impact` — on each changed section.
 3. ✋ `/book:sync-sources` — plans, FE guides, QA suite, overview, Part 3; the person approves the plan changes.
 4. ⏸ `/book:fact-check` — on the modules the change reaches.
-5. `/check-guides` — the FE guides against the change.
-6. `/publish-guides` — if a guide changed.
+5. `/book:check-guides` — the FE guides against the change.
+6. `/book:publish-guides` — if a guide changed.
 7. `/book:progress`.
 
 ## Loops

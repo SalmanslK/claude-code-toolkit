@@ -27,7 +27,7 @@ Then prints:
 Section 2 is a candidate list, not a verdict: history lines ("was open until…")
 legitimately match. It exists so an agent reads twenty lines, not 37k.
 
-The ledgers are read by devtools/checks/ledger_ids.py, shared with /check-guides.
+The ledgers are read by devtools/checks/ledger_ids.py, shared with /book:check-guides.
 
 Duplicate D and Q ids are not this script's: devtools/checks/check-book.py fails
 pre-commit and CI on them.
@@ -61,7 +61,7 @@ def project_root(given: str | None) -> str | None:
 
 
 def ledger_ids(root: str):
-    """The project's own devtools/checks/ledger_ids.py, shared with /check-guides: one reader, no copy."""
+    """The project's own devtools/checks/ledger_ids.py, shared with /book:check-guides: one reader, no copy."""
     path = Path(root) / "devtools" / "checks" / "ledger_ids.py"
     if not path.is_file():
         return None

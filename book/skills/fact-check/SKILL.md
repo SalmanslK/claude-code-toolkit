@@ -27,13 +27,15 @@ the report with which module was not audited and why. No PDF at all: stop before
 anything is written and tell the person. One unreadable requirement in an
 otherwise readable section is `UNVERIFIED` with the reason.
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## Inputs, and where they are
 
 | | Where | Read it how |
 |---|---|---|
-| **FSD** | `requirements/fsd/… - V<n>.pdf` — **highest `n` numerically** | `factory fsd-page "<heading>"` locates the section's pages ([`references/reading-the-fsd.md`](references/reading-the-fsd.md)); print only those. Quote section numbers **and** heading text |
+| **FSD** | `requirements/fsd/… - V<n>.pdf` — **highest `n` numerically** | `book fsd-page "<heading>"` locates the section's pages ([`references/reading-the-fsd.md`](references/reading-the-fsd.md)); print only those. Quote section numbers **and** heading text |
 | **Plan(s)** | `docs/plans/<feature>.md`; find them through `docs/project.md` Part 1 (Feature → FSD § → Plan → Status) | §1 *What the FSD says*, §8 open questions, the *Why* lines in the design sections, and the *Deliberately not built* table are the load-bearing parts; build history is in `docs/archive/plans-history.md` |
 | **Answered questions** | `docs/open-questions.md` — a dated BA answer outranks any plan text written before it | *Resolved* holds one line per answered question, by topic — the rule in force; the full record is `docs/archive/questions-resolved.md`. `project.md` Part 3 (latest) and `docs/archive/requirements-history.md` (earlier) for what moved between FSD revisions |
 | **Code** | `src/…/Domain/Features/`, `Application/Features/<Feature>/` (commands, queries, validators, `<Feature>Errors`), `Application/Abstractions/`, `API/Endpoints/`, `Persistence/` (configurations, repositories, migrations) | Trace the path: endpoint → handler → domain → repository → schema |
@@ -215,4 +217,4 @@ while any material row is `MISSING`, `CONTRADICTED`, `UNTRACED` or
   never a guess in the plan.
 - **`UNVERIFIED`:** name what could not be checked, and run the audit again once it can be.
 - **The matrix changed:** it lands through a pull request, like any other doc.
-- **In a flow** (`/book:flow`): `new-fsd-revision` → `/check-guides`; `finish-feature` → `/check-guides`; `spec-says-x` → `/book:raise`; `qa-build` → `/book:check-permissions`.
+- **In a flow** (`/book:flow`): `new-fsd-revision` → `/book:check-guides`; `finish-feature` → `/book:check-guides`; `spec-says-x` → `/book:raise`; `qa-build` → `/book:check-permissions`.

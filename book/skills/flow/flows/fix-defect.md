@@ -11,7 +11,7 @@
 4. ⏸ `/book:self-review` — in a fresh session or a subagent; until READY.
 5. `/book:commit` — the D id in the message.
 6. ✋ `/book:ship`.
-7. After the merge: `after-merge` (the row closes; the next `/release-notes` lists it as fixed).
+7. After the merge: `after-merge` (the row closes; the next `/book:release-notes` lists it as fixed).
 
 ## Loops
 

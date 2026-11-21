@@ -9,7 +9,7 @@
 2. `/book:sync-sources` — moves each answer to *Resolved* and carries it into the plans.
 3. `/book:raise defect` — if an answer contradicts built code; then `fix-defect`.
 4. ✋ `/book:impact` — if an answer changes a plan; the person approves the plan change.
-5. `/check-guides` — if a guide shows the question as open.
+5. `/book:check-guides` — if a guide shows the question as open.
 
 ## Done when
 

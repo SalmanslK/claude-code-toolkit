@@ -13,6 +13,8 @@ You are bringing this repository's documentation back in line with its code.
 truth for what the system *should* do.** That distinction is the whole skill. Get
 it wrong and you will faithfully document a bug as a design.
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## Which skill is this
@@ -25,7 +27,7 @@ section you are about to rewrite.
 `book:check-docs`.** This skill has no mechanism for being wrong safely.
 
 **Scope is the change.** `git diff --name-only <base>` gives the code you changed;
-`python3 devtools/factory/factory.py impact <paths>` names the guides, plans and
+`python3 devtools/book.py impact <paths>` names the guides, plans and
 generated docs it reaches. Those documents, at the sections that describe the
 changed code, are the pass — not the whole set.
 
@@ -172,7 +174,7 @@ link and anchor, every document's owner, and history in live documents.
 Finish with:
 
 1. **Files changed**, and what changed in each. **If an FE guide is among them, say the
-   front end's Drive copy is stale until `/publish-guides` runs.**
+   front end's Drive copy is stale until `/book:publish-guides` runs.**
 2. **Corrections that mattered** — where the documentation had been actively wrong,
    as opposed to merely thin. These are the ones worth a reader's attention.
 3. **Content removed**, and why it was safe to remove.
@@ -199,7 +201,7 @@ cannot tell you the answer, say that it cannot.
 ## What next
 
 - A stop condition hit: `/book:check-docs` on that area, or a `defects.md` row or question.
-- An FE guide changed: `/publish-guides`, so the front end's Drive copy matches.
+- An FE guide changed: `/book:publish-guides`, so the front end's Drive copy matches.
 - Edits on a `chore/docs-<slug>` branch: its pull request opens only when the person asks
   ([CLAUDE.md, *Git*](CLAUDE.md#git)).
-- **In a flow** (`/book:flow`): `finish-feature` → `/publish-guides`; `docs-health` → `/book:check-permissions`.
+- **In a flow** (`/book:flow`): `finish-feature` → `/book:publish-guides`; `docs-health` → `/book:check-permissions`.

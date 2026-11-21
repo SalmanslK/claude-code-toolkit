@@ -42,9 +42,9 @@ the request is plain words ("the BA answered our questions"), name the flow that
 ## With a name: walk it
 
 1. **Read the recipe** and show its steps, loops and *done when*, so the person sees the whole path.
-2. **Check the packs.** A recipe's **Packs** line names the packs its steps need (`fe-guides`: `/check-guides`,
-   `/publish-guides`, `/release-notes`; `deploy`: `/deploy`). A pack is installed when its skill is under
-   the project's `.claude/skills/`. A step whose pack is absent is **skipped, said in one line**
+2. **Check the packs.** A recipe's **Packs** line names the packs its steps need (`fe-guides`: `/book:check-guides`,
+   `/book:publish-guides`, `/book:release-notes`; `deploy`: `/book:deploy`). A pack is installed when `[book] packs`
+   in `devtools/factory/factory.toml` names it (each of those skills checks this too, and stops). A step whose pack is absent is **skipped, said in one line**
    ("step 5 skipped: no fe-guides pack"); a recipe never fails for a missing pack.
 3. **Run each step** by invoking its skill with the arguments the recipe gives, in order. A step with no
    skill is the session's own work or the person's, as the step says.

@@ -237,4 +237,4 @@ that's why `REVIEW` exists, and why it's never a shortcut to skip.
   run those next.
 - Edits made: commit them on the `chore/docs-<slug>` branch; its pull request opens only
   when the person asks ([CLAUDE.md, *Git*](CLAUDE.md#git)).
-- **In a flow** (`/book:flow`): `docs-health` → `/check-guides`.
+- **In a flow** (`/book:flow`): `docs-health` → `/book:check-guides`.

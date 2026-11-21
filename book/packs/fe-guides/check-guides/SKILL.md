@@ -2,10 +2,10 @@
 name: check-guides
 description: >
   Use when asked whether the FE integration guides are current — "are the FE guides up to date", "the
-  guide is wrong", before a QA build or /publish-guides. Checks every guide against
+  guide is wrong", before a QA build or /book:publish-guides. Checks every guide against
   the contracts, the source and the ledgers; reports each CURRENT or STALE with evidence, then stops for
   approval. Not for code against the FSD (/book:fact-check) or other docs (/book:check-docs).
-allowed-tools: Read, Grep, Glob, Bash(git show*), Bash(git log*), Bash(git grep*), Bash(git ls-tree*), Bash(git rev-list*), Bash(git rev-parse*), Bash(git diff*), Bash(git fetch*), Bash(python .claude/skills/check-guides/scripts/guides_check.py*), Bash(python3 .claude/skills/check-guides/scripts/guides_check.py*), Bash(python devtools/checks/gen-api-contracts.py --check*), Bash(python3 devtools/checks/gen-api-contracts.py --check*)
+allowed-tools: Read, Grep, Glob, Bash(git show*), Bash(git log*), Bash(git grep*), Bash(git ls-tree*), Bash(git rev-list*), Bash(git rev-parse*), Bash(git diff*), Bash(git fetch*), Bash(python "${CLAUDE_SKILL_DIR}/scripts/guides_check.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/guides_check.py"*), Bash(python devtools/checks/gen-api-contracts.py --check*), Bash(python3 devtools/checks/gen-api-contracts.py --check*)
 ---
 
 You are checking **the front-end integration guides**: the documents the FE team builds against and
@@ -17,6 +17,13 @@ wrong is worse than none, because the FE team trusts it. The job is to find wher
 the truth, prove it, and say so.
 
 **Your first deliverable is a report, not an edit.**
+
+## Before you start: this Book has the fe-guides pack
+
+Read `[book] packs` in `devtools/factory/factory.toml`. **If it does not name `fe-guides`, stop**: say in one
+line that this Book did not install the fe-guides pack, so it has no front-end integration guides for this skill,
+and do nothing else. (A Book before v1.3.0 may lack `[book] packs`: then the pack is installed when
+`devtools/checks/check-fe-guides.py` exists.)
 
 ---
 
@@ -49,7 +56,7 @@ that is a code finding (a `defects.md` row, or `/book:fact-check`), not a guide 
 ## Step 1 — The mechanical lists
 
 ```
-python .claude/skills/check-guides/scripts/guides_check.py [--ref origin/dev] [--json]
+python "${CLAUDE_SKILL_DIR}/scripts/guides_check.py" [--ref origin/dev] [--json]
 ```
 
 Also run `python devtools/checks/gen-api-contracts.py --check` where the stack has a generator: a stale
@@ -88,7 +95,8 @@ And once, for all guides:
 - **Coverage** against `fe-api-coverage.md`: **not applicable** until the FE sends a contract. Report it
   that way, never as *passed*.
 
-**Exit 2 means it could not check** (a missing file or ledger heading, a malformed setting, `source_files`
+Run it from the project's root: the script is the plugin's, the project is the current directory's git top
+level. **Exit 2 means it could not check** (a missing file or ledger heading, a malformed setting, `source_files`
 that match nothing, a git failure). Settings are read from `factory.toml` at the same ref as the guides. Stop and say
 so; never report a guide CURRENT from a run that did not finish.
 
@@ -157,7 +165,7 @@ trivial", and is still applied only on approval.
 
 ## What next
 
-- Guides changed and merged: **`/publish-guides`**. The FE team reads Drive, not the repository.
+- Guides changed and merged: **`/book:publish-guides`**. The FE team reads Drive, not the repository.
 - A guide agrees with the code, but the code may not agree with the FSD: **`/book:fact-check <module>`**.
 - A requirement looks moved: **`/book:check-sources`**.
-- **In a flow** (`/book:flow`): `new-fsd-revision` → `/publish-guides`; `answers-arrived` → done; `finish-feature` → `/book:update-docs`; `docs-health` → done; `guides-drift` → `/publish-guides`; `qa-build` → `/release-notes`.
+- **In a flow** (`/book:flow`): `new-fsd-revision` → `/book:publish-guides`; `answers-arrived` → done; `finish-feature` → `/book:update-docs`; `docs-health` → done; `guides-drift` → `/book:publish-guides`; `qa-build` → `/book:release-notes`.

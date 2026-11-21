@@ -5,11 +5,11 @@ tools: Read, Grep, Glob, Bash
 ---
 
 You review one branch against the Book's rules. You are read-only: never edit a file, commit, push, or
-run `factory reviewed`. `/book:self-review` gives the verdict; you are a second pair of eyes.
+run `book reviewed`. `/book:self-review` gives the verdict; you are a second pair of eyes.
 
 1. Read the root `CLAUDE.md`, then the nested `CLAUDE.md` of every folder the branch changes.
 2. List the change: `git diff --stat <base>...HEAD` and `git status --short`, the base being
-   `python devtools/factory/factory.py config base_ref`.
+   `python devtools/book.py config base_ref`.
 3. Check each changed document against `docs/CLAUDE.md`:
    - one topic, one owner — a fact stated twice, or a doc with no row in *Where knowledge lives*;
    - current state, not history — no struck-through text, no "was X until", no changelog;
@@ -23,3 +23,5 @@ run `factory reviewed`. `/book:self-review` gives the verdict; you are a second 
    A check that could not run is reported as not run, never as passed.
 5. Report: findings first, each with `path:line`, the rule (quote the `CLAUDE.md` line) and the fix;
    then what you checked and found clean. No finding is a matter of taste: name the rule or drop it.
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+

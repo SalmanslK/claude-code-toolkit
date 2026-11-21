@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""The mechanical half of /check-guides.
+"""The mechanical half of /book:check-guides.
 
 Compares every front-end integration guide with what the repository says is built, and prints candidate
 findings for the AI to read. It decides nothing: every line is a candidate, read before it is reported.
 
-    python .claude/skills/check-guides/scripts/guides_check.py [REPO] [--ref origin/dev] [--json]
+    python "${CLAUDE_SKILL_DIR}/scripts/guides_check.py" [REPO] [--ref origin/dev] [--json]
 
 Reads the guides, the contracts and the ledgers with `git show <ref>:<path>`, never the working tree, so a
 dirty checkout cannot hide drift; the project's settings come from devtools/factory/factory.toml:
@@ -35,11 +35,6 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-HERE = Path(__file__).resolve()
-BOOK = HERE.parents[4]
-sys.path.insert(0, str(BOOK / "devtools" / "checks"))
-from ledger_ids import ID, Ledgers, LedgerMissing, citation_flag, own_words  # noqa: E402
-
 GUIDES_DIR = "docs/fe-integration-guides"
 CONVENTIONS = "api-conventions.md"
 CONTRACTS = "docs/api/api-contracts.md"
@@ -57,7 +52,7 @@ OTHER_STACKS = {"source_files": ["src"], "route_calls": "", "module_sources": []
 # An error code, quoted as a value in the source (`Error.Conflict("Widget.InUse", …)`, `Code = "Widget.InUse"`),
 # never a doc comment's `cref="…"`. Every match is a code the source has: a guide naming it is not wrong.
 CODE_USE = re.compile(r"(?:^\s*|\(\s*|(?<!cref)=\s*|,\s*|:\s*)\"([A-Z][A-Za-z]+\.[A-Z][A-Za-z]+)\"")
-# A guide must name a code only when it is not merely assigned to some name (D38): an assignment counts when the
+# A guide must name a code only when it is not merely assigned to some name (Book D38): an assignment counts when the
 # name says it is a code (`ErrorCode`, `CONFLICT_CODES`) or is the code's own last part (`NotFound =
 # "Widget.NotFound"`); `ApplicationName = "Widget.App"` or a meter's name is a dotted constant, not a code.
 CODE_PLACED = re.compile(r"(?:^\s*|\(\s*|,\s*|:\s*)\"([A-Z][A-Za-z]+\.[A-Z][A-Za-z]+)\"")
@@ -120,20 +115,52 @@ def grep(repo: Path, ref: str, files: list[str], *args: str) -> str:
     return done.stdout
 
 
-def load_check():
-    """check-fe-guides.py beside this Book's other checks, for its owner rule and its reading of a guide's header."""
-    path = BOOK / "devtools" / "checks" / "check-fe-guides.py"
+def project_root(given: str | None) -> Path:
+    """REPO if given, else the git top level of the current directory: the script runs from the plugin's folder."""
+    if given:
+        return Path(given).resolve()
+    try:
+        done = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True,
+                              encoding="utf-8", errors="replace")
+    except OSError as error:
+        raise SourceMissing(f"git could not run ({error})") from error
+    if done.returncode != 0 or not done.stdout.strip():
+        raise SourceMissing("the current directory is not inside a git repository: run it from the project")
+    return Path(done.stdout.strip()).resolve()
+
+
+def project_module(repo: Path, rel: str, name: str, what: str):
+    """One of the project's own checks, loaded from its devtools/checks/ - never a copy kept here."""
+    path = repo / rel
     if not path.is_file():
-        raise SourceMissing("devtools/checks/check-fe-guides.py — the fe-guides pack's check, whose owner rule "
-                            "this script uses")
-    spec = importlib.util.spec_from_file_location("check_fe_guides", path)
+        raise SourceMissing(f"{rel} — {what}")
+    spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
+    sys.modules[spec.name] = module  # a dataclass looks its module up there
     try:
         spec.loader.exec_module(module)
-    except Exception as error:  # a check that does not load cannot answer for its owner rule
-        raise SourceMissing(f"devtools/checks/check-fe-guides.py did not load ({error})") from error
+    except Exception as error:  # a check that does not load cannot answer for its rule
+        raise SourceMissing(f"{rel} did not load ({error})") from error
     return module
+
+
+def load_check(repo: Path):
+    """check-fe-guides.py beside the Book's other checks, for its owner rule and its reading of a guide's header."""
+    return project_module(repo, "devtools/checks/check-fe-guides.py", "check_fe_guides",
+                          "the fe-guides pack's check, whose owner rule this script uses")
+
+
+# The ledger reader's names, from the project being checked (bind_ledgers, first thing in check()).
+ID = Ledgers = LedgerMissing = citation_flag = own_words = None
+
+
+def bind_ledgers(repo: Path) -> None:
+    """The project's devtools/checks/ledger_ids.py, the one reader of the ledgers, shared with /book:sync-sources."""
+    global ID, Ledgers, LedgerMissing, citation_flag, own_words
+    ledger = project_module(repo, "devtools/checks/ledger_ids.py", "ledger_ids",
+                            "the Book's ledger reader: this is not a Book, or an older one")
+    ID, Ledgers, LedgerMissing = ledger.ID, ledger.Ledgers, ledger.LedgerMissing
+    citation_flag, own_words = ledger.citation_flag, ledger.own_words
 
 
 # -------------------------------------------------------------------------------------------- settings
@@ -158,11 +185,11 @@ def factory_config(repo: Path, ref: str) -> dict:
         raise SourceMissing(f"{FACTORY_TOML} is not valid TOML ({error})") from error
 
 
-def settings(config: dict) -> Settings:
+def settings(config: dict, repo: Path) -> Settings:
     # `[book] stack` where the Book records it; an installed Book often does not, so the dotnet pack is also
     # known by its own check beside this one.
     stack = str((config.get("book") or {}).get("stack") or "")
-    if not stack and (BOOK / "devtools" / "checks" / "check-dotnet.py").is_file():
+    if not stack and (repo / "devtools" / "checks" / "check-dotnet.py").is_file():
         stack = "dotnet"
     table = config.get("fe_guides") or {}
     defaults = STACK_DEFAULTS.get(stack, OTHER_STACKS)
@@ -534,9 +561,10 @@ def finding(kind: str, line: int | None, text: str) -> dict:
 
 
 def check(repo: Path, ref: str) -> dict:
-    fe = load_check()
+    bind_ledgers(repo)
+    fe = load_check(repo)
     factory = factory_config(repo, ref)
-    config = settings(factory)
+    config = settings(factory, repo)
     if not grep(repo, ref, config.source_files, "-l", "-I", "-E", "."):
         raise SourceMissing(f"[fe_guides] source_files {config.source_files} match no file at {ref}")
     names = [name for name in git(repo, "ls-tree", "--name-only", f"{ref}:{GUIDES_DIR}").split()
@@ -796,14 +824,14 @@ def print_report(report: dict) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    parser.add_argument("repo", nargs="?", default=str(BOOK))
+    parser.add_argument("repo", nargs="?", help="the project (default: the git top level of the current directory)")
     parser.add_argument("--ref", default="origin/dev")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     try:
-        report = check(Path(args.repo).resolve(), args.ref)
+        report = check(project_root(args.repo), args.ref)
     except SourceMissing as error:
         print(f"guides_check: could not check — {error}", file=sys.stderr)
         return 2

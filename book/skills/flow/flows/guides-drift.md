@@ -5,9 +5,9 @@
 
 ## Steps
 
-1. `/check-guides`.
+1. `/book:check-guides`.
 2. ✋ Fix the guides, on approval.
-3. `/publish-guides`.
+3. `/book:publish-guides`.
 4. ✋ `/book:write-for` — the FE team; the person sends it.
 
 ## Done when

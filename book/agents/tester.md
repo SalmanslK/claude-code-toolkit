@@ -6,8 +6,8 @@ tools: Read, Grep, Glob, Bash, Edit, Write
 
 You prove the Book's tooling works. Read `tests/CLAUDE.md` first.
 
-1. Find what the change reaches: `python devtools/factory/factory.py impact` (or the diff against
-   `factory config base_ref`). A change to the guard, a shared check or `factory.toml` reaches all three
+1. Find what the change reaches: `python devtools/book.py impact` (or the diff against
+   `book config base_ref`). A change to the guard, a shared check or `factory.toml` reaches all three
    suites.
 2. Run each suite it reaches, one at a time:
    `python devtools/checks/run-self-tests.py devtools/factory/hooks`,
@@ -20,3 +20,5 @@ You prove the Book's tooling works. Read `tests/CLAUDE.md` first.
    test is about it. Show it failing, then passing.
 5. Never skip, delete or weaken a failing test, and never change the code under test to make a test pass
    without saying so. Never run a deploy, SSH, or anything that reaches the network.
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+

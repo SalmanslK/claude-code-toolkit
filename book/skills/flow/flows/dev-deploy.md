@@ -5,7 +5,7 @@
 
 ## Steps
 
-1. ✋ `/deploy DEV` — the full suite may be skipped for a quick fix; the report says so.
+1. ✋ `/book:deploy DEV` — the full suite may be skipped for a quick fix; the report says so.
 2. ✋ `/book:raise defect` — if the post-deploy smoke fails: keep or revert first, then raise it.
 
 ## Done when

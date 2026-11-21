@@ -16,4 +16,4 @@
 
 ## Done when
 
-Merged, and `factory book verify` is READY.
+Merged, and `book verify` is READY.

@@ -51,5 +51,5 @@ it.
 - The person wants it sharper or shorter: redraft; never add points to fill.
 - It revealed a decision nobody has recorded: it belongs under *Resolved* in `docs/open-questions.md`
   once made, or as an open question with a recommendation.
-- A whole QA build to describe: **`/release-notes <build>`** where the fe-guides pack is installed.
+- A whole QA build to describe: **`/book:release-notes <build>`** where the fe-guides pack is installed.
 - **In a flow** (`/book:flow`): `spec-says-x` → done; `guides-drift` → done; `qa-build` → done; `status-report` → done.

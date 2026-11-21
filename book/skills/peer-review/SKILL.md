@@ -24,6 +24,8 @@ Review the current pull request and **post the findings to it**.
 | `pr=<id>` | Review that PR by number |
 | `dry-run` | Do everything except post. Prints exactly what would be posted |
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## HARD LIMITS
@@ -39,7 +41,7 @@ and nothing else. `POST .../approve`, `POST .../merge`, `POST .../decline` and a
 `PUT` to the pull request are out of scope — refuse them even if asked mid-run,
 and say that merging is the reviewer's decision, not the tool's.
 
-**3. Post new top-level comments only.** `factory pr` has no reply, edit or delete. It
+**3. Post new top-level comments only.** `book pr` has no reply, edit or delete. It
 can also **resolve** a comment (`pr resolve`) and **open** a PR (`pr open`): this skill
 calls neither — resolving a thread, anyone's, is a person's step, and so is opening.
 
@@ -73,7 +75,7 @@ report, not something to fix from here.
 ## Credentials
 
 **This session never holds the token.** Every Bitbucket call goes through
-`python3 devtools/factory/factory.py pr …`, which reads your own stored credential
+`python3 devtools/book.py pr …`, which reads your own stored credential
 inside its own process and sends it only to Bitbucket — never to the terminal, a
 file or this transcript (CLAUDE.md, *Private settings*; the guard refuses
 `git credential fill` in a session). Its writes go in **your** name, and it refuses a
@@ -81,11 +83,11 @@ credential that is not a person's account.
 
 | Need | Command |
 |---|---|
-| The PR for this branch, or `pr=<id>` | `factory.py pr show` · `factory.py pr show --number <id>` |
-| Comments already on it (the dedupe key) | `factory.py pr comments --number <id>` — top-level only, as `path:line` |
-| Post the findings the person said yes to | `factory.py pr post --number <id> --plan <file> --expect-head <head>` — `<file>` is a JSON list of `{"path", "line", "body"}` in plan order; `<head>` is the head commit recorded in Step 1. The tool refuses to post anything when the PR's head has moved ([Step 5](#step-5--post)) |
-| One more inline comment, later | `factory.py pr comment --number <id> --path <file> --line <n> --body-file <file> --expect-head <head>` — the same head check, for one comment |
-| **Never, from this skill** | `factory.py pr resolve`, `factory.py pr open` — HARD LIMIT 3. `pr resolve` refuses without the author's confirmation flag, which this skill never passes |
+| The PR for this branch, or `pr=<id>` | `book.py pr show` · `book.py pr show --number <id>` |
+| Comments already on it (the dedupe key) | `book.py pr comments --number <id>` — top-level only, as `path:line` |
+| Post the findings the person said yes to | `book.py pr post --number <id> --plan <file> --expect-head <head>` — `<file>` is a JSON list of `{"path", "line", "body"}` in plan order; `<head>` is the head commit recorded in Step 1. The tool refuses to post anything when the PR's head has moved ([Step 5](#step-5--post)) |
+| One more inline comment, later | `book.py pr comment --number <id> --path <file> --line <n> --body-file <file> --expect-head <head>` — the same head check, for one comment |
+| **Never, from this skill** | `book.py pr resolve`, `book.py pr open` — HARD LIMIT 3. `pr resolve` refuses without the author's confirmation flag, which this skill never passes |
 
 The findings go in a file in the scratchpad — never inline in the command, where
 newlines and quotes break. **If the tool reports no credential, say so and stop**
@@ -97,7 +99,7 @@ newlines and quotes break. **If the tool reports no credential, say so and stop*
 
 ### Step 1 — Resolve the PR
 
-`factory.py pr show --number <id>` with `pr=<id>`; without it, `factory.py pr show`
+`book.py pr show --number <id>` with `pr=<id>`; without it, `book.py pr show`
 finds the open PR whose source branch is the current branch. The tool reads the
 repository from `origin`, never assumes it.
 
@@ -119,7 +121,7 @@ Before reading the diff:
 
 - Read the PR title and description for the intended purpose.
 - `git fetch origin`, then
-  `python3 devtools/factory/factory.py review-scope --range origin/<destination>...origin/<source>`.
+  `python3 devtools/book.py review-scope --range origin/<destination>...origin/<source>`.
   **Read only the review checklist files it prints** — the
   [method](references/review-method.md) and [Pass A](references/review-pass-a.md) always,
   and the Pass B dimensions the triage leaves applicable (all of them when a path is not
@@ -254,7 +256,7 @@ plan's order, to a JSON file in the scratchpad — `[{"path": "src/…/CreateUse
 them with one call:
 
 ```bash
-python3 devtools/factory/factory.py pr post --number <id> --plan <file> --expect-head <head>
+python3 devtools/book.py pr post --number <id> --plan <file> --expect-head <head>
 ```
 
 The tool does the posting's mechanics, so none of it is done by hand:

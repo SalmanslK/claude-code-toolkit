@@ -13,10 +13,19 @@ team's Google Drive folder**.
 The guides are written for a team that does not read this repository. They read
 the Drive folder — `https://drive.google.com/drive/folders/<id>`, its id owned by
 `[fe_guides] drive_folder_id` in `devtools/factory/factory.toml` and printed by
-`python devtools/factory/factory.py config fe_guides.drive_folder_id`
+`python devtools/book.py config fe_guides.drive_folder_id` (`devtools/factory/factory.py` before Book v1.4.0)
 — one Google Doc per guide — and they bookmark, link and comment on those Docs.
 That is what makes this more than an upload: **a Doc's URL is a promise**, and
 this skill keeps it.
+
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
+## Before you start: this Book has the fe-guides pack
+
+Read `[book] packs` in `devtools/factory/factory.toml`. **If it does not name `fe-guides`, stop**: say in one
+line that this Book did not install the fe-guides pack, so it has no front-end integration guides for this skill,
+and do nothing else. (A Book before v1.3.0 may lack `[book] packs`: then the pack is installed when
+`devtools/checks/check-fe-guides.py` exists.)
 
 ---
 
@@ -78,7 +87,7 @@ does not explain stops the publish: tell the user what failed, and publish nothi
 
 Everything mechanical is in
 [`Publish-FeGuidesToDrive.ps1`](Publish-FeGuidesToDrive.ps1) beside this file
-(`Get-Help .\.claude\skills\publish-guides\Publish-FeGuidesToDrive.ps1 -Detailed` from the repository root, for its parameters). The
+(`Get-Help "${CLAUDE_SKILL_DIR}\Publish-FeGuidesToDrive.ps1" -Detailed` from the repository root, for its parameters). The
 skill's own work is the part a script cannot do: **deciding which existing Doc is
 which guide, and getting the user's agreement before anything is renamed.**
 
@@ -108,7 +117,7 @@ branch's guides, which is usually what the question means.
 ### Step 2 — Dry run, and read the two lists at the bottom
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\.claude\skills\publish-guides\Publish-FeGuidesToDrive.ps1 -DryRun
+powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_SKILL_DIR}\Publish-FeGuidesToDrive.ps1" -DryRun
 ```
 
 Nothing is renamed, created or uploaded. What the dry run *does* touch on Drive,
@@ -142,7 +151,7 @@ left is the module; that is the guide.
 read-only and cheap:
 
 ```powershell
-$folder = python devtools/factory/factory.py config fe_guides.drive_folder_id
+$folder = python devtools/book.py config fe_guides.drive_folder_id
 rclone cat "gdrive:<title as listed>.md" --drive-root-folder-id $folder --drive-export-formats md --count 1500
 ```
 
@@ -192,7 +201,7 @@ and the table with those guides showing `renamed, would update`.
 ### Step 4 — Publish
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\...\Publish-FeGuidesToDrive.ps1 -Verify [-Worktree -WorktreeRoot <root>] [-RenameMap <path>]
+powershell -NoProfile -ExecutionPolicy Bypass -File "${CLAUDE_SKILL_DIR}\Publish-FeGuidesToDrive.ps1" -Verify [-Worktree -WorktreeRoot <root>] [-RenameMap <path>]
 ```
 
 In order: the renames, then a first upload of the guides that have no Doc (so
@@ -245,7 +254,7 @@ cause is fixed; never report it as published.
 - **Do not trash, move, or "tidy" anything in the folder.** Report it.
 - **Do not put the folder id anywhere but `[fe_guides] drive_folder_id` in
   `devtools/factory/factory.toml`** — this skill and the script read it from
-  there (`factory book verify` N17 fails a copy) — and do not put the rclone
+  there (`book verify` N17 fails a copy) — and do not put the rclone
   token anywhere at all.
 
 ---

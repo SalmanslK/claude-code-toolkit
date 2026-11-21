@@ -22,6 +22,8 @@ goodwill. Worse, **a plan built on a section that has since changed is confident
 wrong**, and nothing in the code, tests or docs will contradict it. Every other skill
 reasons from the snapshot, so run this **first** when requirements are in play.
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## Blocked means stop
@@ -39,7 +41,7 @@ the report then names as **could not check**.
 
 ## The sources
 
-**Start with `python3 devtools/factory/factory.py requirements status`** — read-only and
+**Start with `python3 devtools/book.py requirements status`** — read-only and
 offline. From [`requirements/read-me.txt`](requirements/read-me.txt) (the root index,
 and the **one place every live link is kept** — its *LINKS*, never hard-coded here) and the
 folders beside it, it prints one line per source: its live link or what the index records
@@ -115,13 +117,13 @@ check of the FSD.**
 - Comment activity moves `modifiedTime`/`fileSize` without changing the export. A
   metadata move with an identical PDF means **read the new comments**, not "nothing
   happened".
-- **Save the threads with the snapshot**, so the BA's answers are part of the book: `python3 devtools/factory/factory.py fsd-threads --save`
+- **Save the threads with the snapshot**, so the BA's answers are part of the book: `python3 devtools/book.py fsd-threads --save`
   writes `requirements/fsd/comment-threads - <date>.md` (it needs `live_credential` in your
   private settings file — `devtools/README.md`, *Private settings*; without it, write the
   same file from the dump above). It prints what Phase 5 records: the Doc's
   `modifiedTime`, and the time the threads were read through — keep both in
   `requirements/fsd/read-me.txt`'s *Last checked* line as `(modifiedTime <t>)` and
-  "modified after <t>", because **the next check (`factory fsd-threads`) compares the live Doc
+  "modified after <t>", because **the next check (`book fsd-threads`) compares the live Doc
   against exactly those two**. Saving threads is a record, not a capture: it may happen on any
   day. **But record the new `modifiedTime` only when our newest `V<n>` still matches the
   Doc's text** (Phase 2 found only comment activity, or Phase 4 captured it). When the

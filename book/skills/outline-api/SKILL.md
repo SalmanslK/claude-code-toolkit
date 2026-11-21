@@ -23,6 +23,8 @@ table, with the shapes beneath it. No new document. Once built, §6 becomes link
 `api-contracts.md` (generated) and the module's FE guide,
 as the template says.
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## Steps
@@ -30,7 +32,7 @@ as the template says.
 ### 1. Gather — read before drawing
 
 1. **The FSD section** for the module — locate and print only its pages with
-   `factory fsd-page "<heading>" --print` ([reading the FSD](../fact-check/references/reading-the-fsd.md)):
+   `book fsd-page "<heading>" --print` ([reading the FSD](../fact-check/references/reading-the-fsd.md)):
    its field tables (type, required,
    limits, defaults), validation messages word for word, list columns, filters, sorts and search,
    and every action and its rule.

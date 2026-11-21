@@ -34,8 +34,9 @@ The rclone remote name. Default: gdrive.
 .PARAMETER FolderId
 The Drive folder id the guides are published to. Default: [fe_guides]
 drive_folder_id in devtools/factory/factory.toml — its one owner — read through
-`python devtools/factory/factory.py config fe_guides.drive_folder_id`, so it is
-never repeated here.
+`python devtools/book.py config fe_guides.drive_folder_id` (`devtools/factory/factory.py` on a Book
+before v1.4.0), so it is never repeated here. Run from the project's root: the script lives in the book
+plugin, and the repository is the current directory's.
 
 .PARAMETER RenameMap
 Path to a JSON object of { "<Drive title as listed>": "<guide file name without .md>" }.
@@ -184,10 +185,12 @@ function Write-StagedGuide {
 }
 
 function Get-ConfiguredFolderId {
-    # The folder id has one owner, [fe_guides] drive_folder_id in factory.toml. factory.py reads it
-    # with Python's own TOML parser rather than a second parser here.
+    # The folder id has one owner, [fe_guides] drive_folder_id in factory.toml. The Book's command reads it
+    # with Python's own TOML parser rather than a second parser here: devtools\book.py from Book v1.4.0,
+    # devtools\factory\factory.py before it.
     param([string]$RepoRoot)
-    $factory = Join-Path $RepoRoot 'devtools\factory\factory.py'
+    $factory = Join-Path $RepoRoot 'devtools\book.py'
+    if (-not (Test-Path -LiteralPath $factory -PathType Leaf)) { $factory = Join-Path $RepoRoot 'devtools\factory\factory.py' }
     $ErrorActionPreference = 'Continue'  # a missing or stub interpreter writes to stderr; try the next
     foreach ($candidate in @(@('python3'), @('python'), @('py', '-3'))) {
         $command = Get-Command $candidate[0] -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1

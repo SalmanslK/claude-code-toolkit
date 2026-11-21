@@ -1,6 +1,6 @@
 # B0 · Pass B, stack-free — dimensions 2–12 (checks 16–161)
 
-The Book's own Pass B: every correctness dimension in one file, written for no particular stack. `factory review-scope` loads it (`[review_scope.dimensions] B0`) unless the change is docs or requirements only. A stack pack replaces it with one file per dimension — the dotnet pack's `review-b1-architecture.md` … `review-b11-configuration.md` — and its own `[review_scope]` rows. The [method](review-method.md) holds the finding format, severity and the READY rule.
+The Book's own Pass B: every correctness dimension in one file, written for no particular stack. `book review-scope` loads it (`[review_scope.dimensions] B0`) unless the change is docs or requirements only. A stack pack replaces it with one file per dimension — the dotnet pack's `review-b1-architecture.md` … `review-b11-configuration.md` — and its own `[review_scope]` rows. The [method](review-method.md) holds the finding format, severity and the READY rule.
 
 Work through the dimensions below in the order that matches what the diff
 touches; read the diff, decide which can plausibly break, and press hardest
@@ -227,7 +227,7 @@ volume** — this project's own scale, not a hypothetical.
 **Check the skip count, not the colour.** Tests that need a database or a
 service often skip silently when it is missing, and a filter that matches
 nothing runs nothing — a run that executed nothing looks identical to one that
-passed. In a factory run, the run file records which tests prove each
+passed. In a book run, the run file records which tests prove each
 criterion and that they ran; trust that evidence unless you can show it is
 wrong.
 

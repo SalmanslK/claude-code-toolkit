@@ -18,6 +18,8 @@ wrong, and say so with evidence.
 
 **Your first deliverable is a report, not a commit.**
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## What counts as documentation here
@@ -59,7 +61,7 @@ exactly the things under suspicion.
 | Asked about | Read |
 |---|---|
 | A module or feature | Its plan, its FE guide, its rows in the owning docs; its feature folders across the layers, its endpoints, configurations and migrations, its tests — and the cross-cutting mechanisms it goes through, at the point it uses them |
-| A change — a branch, "DEV minus QA", a run | `git diff --name-only <base>..<head>`; the changed code and the docs that describe it, both ways; `/book:impact`'s map (`factory impact <paths>`) for which docs those are |
+| A change — a branch, "DEV minus QA", a run | `git diff --name-only <base>..<head>`; the changed code and the docs that describe it, both ways; `/book:impact`'s map (`book impact <paths>`) for which docs those are |
 | The whole repository | Everything below |
 
 State the scope in the executive summary. **Run
@@ -223,5 +225,5 @@ entire value of the exercise.
 - Approved Type A findings: each code fix on its own work branch, with its `defects.md` row.
 - Approved doc fixes outside a work branch: commit them on the `chore/docs-<slug>` branch;
   its pull request opens only when the person asks ([CLAUDE.md, *Git*](CLAUDE.md#git)).
-- An FE guide changed: `/publish-guides`. Requirement text in doubt: `/book:check-sources`.
-- **In a flow** (`/book:flow`): `docs-health` → `/book:update-docs`; `qa-build` → `/check-guides`.
+- An FE guide changed: `/book:publish-guides`. Requirement text in doubt: `/book:check-sources`.
+- **In a flow** (`/book:flow`): `docs-health` → `/book:update-docs`; `qa-build` → `/book:check-guides`.

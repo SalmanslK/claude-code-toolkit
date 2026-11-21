@@ -14,11 +14,18 @@ correction goes in the next build's notes.
 
 **Your first deliverable is a draft, not a file.**
 
+## Before you start: this Book has the fe-guides pack
+
+Read `[book] packs` in `devtools/factory/factory.toml`. **If it does not name `fe-guides`, stop**: say in one
+line that this Book did not install the fe-guides pack, so it has no front-end integration guides for this skill,
+and do nothing else. (A Book before v1.3.0 may lack `[book] packs`: then the pack is installed when
+`devtools/checks/check-fe-guides.py` exists.)
+
 ---
 
 ## Step 1 — Fix the range
 
-The build is `<n>`, given by the person (`/release-notes 12`). The range is **the last QA build → the
+The build is `<n>`, given by the person (`/book:release-notes 12`). The range is **the last QA build → the
 commit this build deploys**:
 
 - **The last QA build:** the commit the previous `docs/release-notes/qa-build-<n-1>.md` names in its
@@ -76,7 +83,7 @@ Show the draft and **stop for approval**.
 
 ## What next
 
-- The FE guides changed in this build: **`/publish-guides`**, so the Drive copy matches.
+- The FE guides changed in this build: **`/book:publish-guides`**, so the Drive copy matches.
 - A short summary for a PM or the client: **`/book:write-for <reader>`**.
 - A gap found while writing that has no defect or question yet: record it the day it is found.
-- **In a flow** (`/book:flow`): `qa-build` → `/deploy`.
+- **In a flow** (`/book:flow`): `qa-build` → `/book:deploy`.

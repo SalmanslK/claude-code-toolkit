@@ -8,6 +8,8 @@ description: >
 
 Follow these steps exactly.
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ## Step 0 — Where you are
 
 `git branch --show-current`. On `dev`, `qa`, `uat` or `main`, **stop**: CLAUDE.md
@@ -19,7 +21,7 @@ the changes.
 Take the fingerprint of what is about to be committed:
 
 ```bash
-python devtools/factory/factory.py fingerprint
+python devtools/book.py fingerprint
 ```
 
 It fetches, then hashes the change against `origin/dev` — committed, uncommitted and
@@ -66,7 +68,7 @@ For each group: `git add` only its files, write its message (Step 3), commit
 (Step 4). The Step 1 review covered the whole change; it is not repeated per group.
 
 **Tests, once, before the first commit** ([CLAUDE.md, *Building and testing*](CLAUDE.md#building-and-testing)).
-`python devtools/factory/factory.py impact --ci` prints `tier=`, `filter=` and `reason=` — never
+`python devtools/book.py impact --ci` prints `tier=`, `filter=` and `reason=` — never
 work a tier out by hand:
 
 | Tier | Run |
@@ -77,7 +79,7 @@ work a tier out by hand:
 
 Read the executed, passed and skipped counts ([`tests/CLAUDE.md`](tests/CLAUDE.md#choosing-what-to-run)):
 a failure, an integration skip, or `0` executed **stops here** — nothing is committed. If
-`factory impact` fails, say so and stop.
+`book impact` fails, say so and stop.
 
 ## Step 3 — The message
 
@@ -115,11 +117,11 @@ commit again — never `--no-verify`. A **guard** refusal is different: report i
 
 ## Step 5 — Record the verdict
 
-After the last commit, record the Step 1 review for it, so `factory pr open` needs no
+After the last commit, record the Step 1 review for it, so `book pr open` needs no
 second review:
 
 ```bash
-python devtools/factory/factory.py reviewed READY --fingerprint <the review's Fingerprint: hash>
+python devtools/book.py reviewed READY --fingerprint <the review's Fingerprint: hash>
 ```
 
 It records READY for the head commit only when the tree is clean and the committed

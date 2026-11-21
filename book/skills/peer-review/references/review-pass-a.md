@@ -27,7 +27,7 @@ So for every feature the diff touches, go the other way — from the
 requirement to the code, not from the code to the requirement:
 
 1. **Read the FSD section the feature claims**, from the highest `V<n>.pdf` in
-   `requirements/fsd/` — that section's pages only (`factory fsd-page "<heading>" --print`), by
+   `requirements/fsd/` — that section's pages only (`book fsd-page "<heading>" --print`), by
    [Reading the FSD](../../fact-check/references/reading-the-fsd.md). Extract
    it rather than trusting a summary of it. **Unreadable: stop and tell the
    person** — this pass is never skipped, and a review without it is not a READY.

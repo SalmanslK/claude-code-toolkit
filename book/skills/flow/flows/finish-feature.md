@@ -6,10 +6,10 @@
 ## Steps
 
 1. `/book:fact-check` — on the module: requirement, plan, code, test.
-2. `/check-guides`.
+2. `/book:check-guides`.
 3. `/book:update-docs` — where the code is right and a doc lags.
-4. `/publish-guides` — if a guide changed.
-5. `/book:progress` — marks the feature Built, which the next `/release-notes` lists.
+4. `/book:publish-guides` — if a guide changed.
+5. `/book:progress` — marks the feature Built, which the next `/book:release-notes` lists.
 
 ## Loops
 

@@ -9,7 +9,7 @@ sharing pattern `book:check-docs` and `book:update-docs` already use for
 
 The checklist is in parts, so a review loads only what its change can touch: this **method**,
 [Pass A](review-pass-a.md) (always), and one file per Pass B dimension, listed under
-[Pass B](#pass-b--correctness--dimensions-212-checks-16160). **`factory review-scope` names the
+[Pass B](#pass-b--correctness--dimensions-212-checks-16160). **`book review-scope` names the
 parts a change needs** — this file and Pass A always, and every Pass B file when it cannot place a
 path. A dimension not loaded is still a row in the [coverage table](#coverage-summary).
 
@@ -52,7 +52,7 @@ sections:
 | Root build and deploy config — `Directory.Packages.props`, `compose*.yaml`, `Dockerfile`, `appsettings*.json`, `bitbucket-pipelines.yml` | B4 Security, B11 Configuration; licences and the `REPLACE` placeholder rule | The changed files in full | — |
 | Generated files — `docs/api/api-contracts.md`, `docs/database-erd.md`, a migration's `.Designer.cs`, the model snapshot | Only that they were regenerated with their source | The diff, never the whole file | Everything else — review the source they came from |
 
-`factory review-scope` applies this table to the change's paths; its rows are `[[review_scope.rows]]`
+`book review-scope` applies this table to the change's paths; its rows are `[[review_scope.rows]]`
 in `devtools/factory/factory.toml`, held to this table by a test, so a row changes in both.
 
 **Pass A still runs on every diff.** On one with no product code, A1 reduces
@@ -183,7 +183,7 @@ What is sound: one or two lines.
 
 - **NOT READY** when any CRITICAL or HIGH finding is held with high or medium confidence.
   **This is the one READY rule**: `/book:self-review`'s *Branch Readiness* line and `/book:peer-review`'s
-  verdict both follow it, and `/book:commit` and `factory pr open` act on what it decides.
+  verdict both follow it, and `/book:commit` and `book pr open` act on what it decides.
 - A **low**-confidence finding is advisory: never a reason for NOT READY. Low confidence means the
   evidence points at a defect without settling it; a suspicion with no evidence is not a finding at
   all, but a question in the terminal review ([Before a finding is reported](#before-a-finding-is-reported)).

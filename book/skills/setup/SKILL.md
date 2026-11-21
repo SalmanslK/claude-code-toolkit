@@ -2,19 +2,21 @@
 name: setup
 description: >
   Use to set up the Book in a new repository or to check an existing one is ready — "set up the Book
-  here", "is this repo ready", "verify the Book". Asks the person for every answer, runs `factory book
-  init` (creates only what is absent) and `factory book verify`, and reports READY, READY WITH GAPS or
+  here", "is this repo ready", "verify the Book". Asks the person for every answer, runs `book
+  init` (creates only what is absent) and `book verify`, and reports READY, READY WITH GAPS or
   NOT READY. Not for taking a Book to a newer template (book:upgrade) or fixing what verify finds in the
   documents. Formerly /book-setup.
 ---
 
 # /book:setup — a Book that is set up, or a list of what is not
 
-**A script does the checking; this skill asks and decides.** `factory book verify` and
-`factory book init` (`devtools/factory/book.py`) do the mechanical work. This skill gathers the answers
+**A script does the checking; this skill asks and decides.** `book verify` and
+`book init` (`devtools/factory/book.py`) do the mechanical work. This skill gathers the answers
 only a person can give, puts each one into the parameter file, and reports what the script found.
 Nothing is guessed: an answer the person has not given stays an empty string, which leaves a
 `<!-- FILL -->` slot that verify reports as `TO FILL`.
+
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
 
 ## Must never
 
@@ -38,7 +40,7 @@ Nothing is guessed: an answer the person has not given stays an empty string, wh
 ### 1. Verify first, always
 
 ```sh
-python3 devtools/factory/factory.py book verify
+python3 devtools/book.py verify
 ```
 
 Read-only. One line per element (`OK`, `MISSING`, `WRONG <why>`, `TO FILL <slot>`,
@@ -73,7 +75,7 @@ Ask in plain words, one at a time, and write each into `book.toml` at the reposi
 | `mode` | `greenfield` or `brownfield` (step 2) |
 | `base_branch`, `protected_branches` | The integration branch, and every branch reached only by promotion |
 | `git_host`, `ci_live` | Bitbucket or another host; whether CI runs today (if not, the local CI gate is required) |
-| `owners` | The AI-file owners: **each person runs `factory pr whoami` themselves** and gives their account id. Written `owners = [{ name = "A Person", account_id = "<id>" }]`, one table per owner, or `[]` |
+| `owners` | The AI-file owners: **each person runs `book pr whoami` themselves** and gives their account id. Written `owners = [{ name = "A Person", account_id = "<id>" }]`, one table per owner, or `[]` |
 | `jira_site`, `jira_key` | The Jira site and project key, or empty for no tracker |
 | `fsd_label`, `fsd_link` | The FSD's label in the index (`FSD`) and its live Google Doc link |
 | `fe_drive_folder_id` | The FE team's **existing** Drive folder, from its link — never created here |
@@ -92,7 +94,7 @@ once the person agrees it served its purpose.
 On a work branch cut with `--no-track`:
 
 ```sh
-python3 devtools/factory/factory.py book init --params book.toml
+python3 devtools/book.py init --params book.toml
 ```
 
 It copies the template's files with the names replaced, writes skeletons with `<!-- FILL -->` slots,

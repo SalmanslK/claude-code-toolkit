@@ -115,7 +115,7 @@ read the total. Count the rows. Check `git log`.
 |---|---|
 | Tests defined (`[Fact]`/`[Theory]` methods) | `python3 devtools/checks/test-trend.py` — its last line, the count on `origin/dev` today (`git fetch` first) |
 | Routes and endpoint groups | `python3 devtools/checks/gen-api-contracts.py --check`; when it says up to date, the **N routes across M endpoint groups** line of `docs/api/api-contracts.md` is current |
-| Modules | `git grep -c "^\[\[modules\]\]" devtools/factory/factory.toml` — the modules `factory impact` maps |
+| Modules | `git grep -c "^\[\[modules\]\]" devtools/factory/factory.toml` — the modules `book impact` maps |
 
 No tool prints a run's **executed, passed or skipped** counts without running it — theories
 expand and the integration tests may skip — so a doc quoting a run is checked against a run

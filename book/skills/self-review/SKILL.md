@@ -3,9 +3,9 @@ name: self-review
 description: >
   Use before committing or opening a pull request, to review everything that differs from origin/dev
   against the team's review checklist. Read-only: prints a READY or NOT READY verdict
-  and records it, which `factory pr open` requires. For an
+  and records it, which `book pr open` requires. For an
   open PR use book:peer-review; for FSD traceability, book:fact-check. Formerly /review-branch.
-allowed-tools: Read, Grep, Glob, Bash(python3 devtools/factory/factory.py reviewed *), Bash(python devtools/factory/factory.py reviewed *), Bash(python3 devtools/factory/factory.py fingerprint), Bash(python devtools/factory/factory.py fingerprint), Bash(python3 devtools/factory/factory.py review-scope*), Bash(python devtools/factory/factory.py review-scope*), Bash(git diff*), Bash(git log*), Bash(git status*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git ls-files*), Bash(git show*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
+allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py reviewed *), Bash(python3 devtools/factory/factory.py reviewed *), Bash(python devtools/book.py reviewed *), Bash(python devtools/factory/factory.py reviewed *), Bash(python3 devtools/book.py fingerprint), Bash(python3 devtools/factory/factory.py fingerprint), Bash(python devtools/book.py fingerprint), Bash(python devtools/factory/factory.py fingerprint), Bash(python3 devtools/book.py review-scope*), Bash(python3 devtools/factory/factory.py review-scope*), Bash(python devtools/book.py review-scope*), Bash(python devtools/factory/factory.py review-scope*), Bash(git diff*), Bash(git log*), Bash(git status*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git ls-files*), Bash(git show*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
 ---
 
 You are a senior/architect-level engineer performing a strict, evidence-based
@@ -22,6 +22,8 @@ fixes the code it is reviewing, and never commits — that is
 
 **Run it in a fresh session or a subagent, never in the session that wrote the change** (CLAUDE.md, Working with AI here).
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ---
 
 ## The review framework
@@ -30,7 +32,7 @@ The review checklist, shared with `/book:peer-review`, is 160 checks in 12 dimen
 the [method](../peer-review/references/review-method.md) (triage table, anti-noise rules, finding format,
 severity, the verdict, the coverage table), [Pass A, Conformance](../peer-review/references/review-pass-a.md)
 (always, first), and one file per Pass B dimension. **Read only the files
-`python devtools/factory/factory.py review-scope` prints** — the method and Pass A always,
+`python devtools/book.py review-scope` prints** — the method and Pass A always,
 and the Pass B dimensions the triage table leaves applicable; a path it cannot place
 loads them all. A `book:<skill>/<path>` file is in this plugin, read it at `${CLAUDE_SKILL_DIR}/../<skill>/<path>`; any other path is the project's, from its root. Run it with no arguments: it reads the change against `origin/dev`,
 committed or not, which on a stacked branch also holds the parent's paths — more files,
@@ -56,12 +58,12 @@ branch already changed under `docs/`.
    (its parent's commits appear in `git log $BASE..HEAD`, and the user named the
    parent or it is the branch this one was cut from): `BASE` is the parent's tip
    — say so in the summary. Run `git diff $BASE --stat` and
-   `git log $BASE..HEAD --oneline`, then run `factory review-scope`, read the
+   `git log $BASE..HEAD --oneline`, then run `book review-scope`, read the
    files it prints, and place every path in the method's triage table **before
    opening any changed file**.
    Then print the **fingerprint** of what you are about to review, the line
    `/book:commit` matches to reuse this verdict and records it with:
-   `python devtools/factory/factory.py fingerprint`. It fetches and hashes the
+   `python devtools/book.py fingerprint`. It fetches and hashes the
    change against `origin/dev` — committed, uncommitted and untracked — even on a
    stacked branch: it is `/book:commit`'s key, not the review's base. No hash printed
    (fetch failed, no merge base): stop and say so. Shell variables do not survive
@@ -72,7 +74,7 @@ branch already changed under `docs/`.
    rename stub), follow that copy instead and say so — the Book it reviews is on it.
 2. **Understand the objective**: the commit messages, then the plan section
    and FSD section(s) the change claims, per Pass A — that section's pages
-   only — `factory fsd-page "<heading>" --print`, by [Reading the FSD](../fact-check/references/reading-the-fsd.md).
+   only — `book fsd-page "<heading>" --print`, by [Reading the FSD](../fact-check/references/reading-the-fsd.md).
    A change that claims no FSD section: Pass A reduces to checking what the
    changed text says about a requirement. If a claimed FSD section cannot be
    read, stop and say so: a review without Pass A is not a READY.
@@ -138,8 +140,8 @@ this one and `/book:peer-review` — ends with. MEDIUM, LOW and INFO findings st
 whatever the verdict.
 
 **Then record it, with the Step 1 fingerprint:**
-`python devtools/factory/factory.py reviewed READY --fingerprint <hash>` (or `NOT-READY`). The
-verdict is kept inside `.git` for the current commit, and `factory pr open` refuses a branch without
+`python devtools/book.py reviewed READY --fingerprint <hash>` (or `NOT-READY`). The
+verdict is kept inside `.git` for the current commit, and `book pr open` refuses a branch without
 a READY verdict for the very commit it opens. The tool records only on a clean tree whose content is
 still what the fingerprint names; with uncommitted changes it refuses — the review covered work that
 is not in a commit — and `/book:commit` records this verdict itself once it has committed exactly that

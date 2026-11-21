@@ -4,7 +4,7 @@ description: >
   Use to check who may do what: FSD role rules changed, a module added, before a QA build. Sets the
   FSD's role rules against authorization §2 and the code; reports gaps. Writes nothing.
 argument-hint: "[module | branch | all]"
-allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git grep*), Bash(git ls-files*), Bash(git branch*), Bash(factory fsd-page*), Bash(pdftotext *), Bash(python "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*)
+allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git grep*), Bash(git ls-files*), Bash(git branch*), Bash(python devtools/book.py fsd-page*), Bash(python3 devtools/book.py fsd-page*), Bash(python devtools/factory/factory.py fsd-page*), Bash(python3 devtools/factory/factory.py fsd-page*), Bash(pdftotext *), Bash(python "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*)
 ---
 
 # /book:check-permissions [module | branch | all] — who may do what, three ways
@@ -27,6 +27,8 @@ when the person approves it.
 Roles are data in the Book: only the Administrator is seeded, and every other role is created through
 the role API. So "role X may delete" is checked as **"a permission exists for delete, gates the delete
 route, and the FSD's roles can be given it"** — not as a seeded grant.
+
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
 
 ## Scope — decide it first
 
@@ -56,7 +58,7 @@ Cite its lines; do not re-derive them by reading.
 ## 2. The judgement half — the FSD
 
 For each module in scope, locate its permission and role sections with
-`factory fsd-page "<heading>" --print` ([reading the FSD](../fact-check/references/reading-the-fsd.md)) and
+`book fsd-page "<heading>" --print` ([reading the FSD](../fact-check/references/reading-the-fsd.md)) and
 read them. Note every action the FSD names and **which roles may do it**, with the section number and
 heading. Where the FSD is silent on an action the code gates, that is a question, not a finding against
 the code.

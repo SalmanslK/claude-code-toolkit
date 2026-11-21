@@ -5,10 +5,10 @@
 
 ## Steps
 
-1. `/book:setup` — the answers, `factory book init`, `factory book verify`.
+1. `/book:setup` — the answers, `book init`, `book verify`.
 2. `/book:check-sources all` — the first snapshots.
 3. `new-feature` for the first feature.
 
 ## Done when
 
-`factory book verify` is READY.
+`book verify` is READY.

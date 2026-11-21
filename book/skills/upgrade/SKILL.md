@@ -5,15 +5,17 @@ description: >
   release". Runs the drift report, stops on conflicts, applies what the project never changed, carries
   the new settings by hand, then verify, review, local CI and the pull request. Not for a new Book or
   verifying one (/book:setup). Formerly /book-upgrade.
-allowed-tools: Read, Grep, Glob, Bash(git status*), Bash(git log*), Bash(git diff*), Bash(git fetch*), Bash(git show*), Bash(git branch --show-current*), Bash(python devtools/factory/factory.py book verify*), Bash(python3 devtools/factory/factory.py book verify*), Bash(python devtools/checks/check-*), Bash(python3 devtools/checks/check-*), Bash(python devtools/checks/run-self-tests.py*), Bash(python3 devtools/checks/run-self-tests.py*), Bash(sh devtools/checks/ci-local.sh*)
+allowed-tools: Read, Grep, Glob, Bash(git status*), Bash(git log*), Bash(git diff*), Bash(git fetch*), Bash(git show*), Bash(git branch --show-current*), Bash(python devtools/book.py verify*), Bash(python devtools/factory/factory.py book verify*), Bash(python3 devtools/book.py verify*), Bash(python3 devtools/factory/factory.py book verify*), Bash(python devtools/checks/check-*), Bash(python3 devtools/checks/check-*), Bash(python devtools/checks/run-self-tests.py*), Bash(python3 devtools/checks/run-self-tests.py*), Bash(sh devtools/checks/ci-local.sh*)
 ---
 
 # /book:upgrade — the project's Book, at the newer release
 
-**A script compares; this skill decides with the person.** `factory book upgrade` (in the newer
+**A script compares; this skill decides with the person.** `book upgrade` (in the newer
 template's checkout) says, for every file the template owns, whether the project can take the new
 copy. This skill runs it, shows the person what it means, applies only what they approve, and carries
 over by hand what the tool never writes. One project, one branch, one pull request.
+
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
 
 ## Must never
 
@@ -28,7 +30,7 @@ over by hand what the tool never writes. One project, one branch, one pull reque
 
 ## What the tool never writes
 
-`factory book upgrade --apply` writes only `BEHIND` and `NEW` template files, and stamps
+`book upgrade --apply` writes only `BEHIND` and `NEW` template files, and stamps
 `book_version` in `devtools/factory/factory.toml`. **Everything else is this skill's to carry, by
 hand, with the person:**
 
@@ -68,7 +70,7 @@ hand, with the person:**
 The person runs it from the template's checkout, or approves it in this session:
 
 ```sh
-python devtools/factory/factory.py book upgrade --target <project>
+python devtools/book.py upgrade --target <project>
 ```
 
 Each file the template owns gets one state:
@@ -95,7 +97,7 @@ calling it deleted.
 ### 3. Apply, then carry over
 
 ```sh
-python devtools/factory/factory.py book upgrade --target <project> --apply
+python devtools/book.py upgrade --target <project> --apply
 ```
 
 Then, on the branch, in reviewable commits:
@@ -112,7 +114,7 @@ never written into it from here.
 ### 4. Prove it
 
 ```sh
-python devtools/factory/factory.py book verify
+python devtools/book.py verify
 python devtools/checks/run-self-tests.py devtools/factory/hooks
 python devtools/checks/run-self-tests.py devtools/factory
 python devtools/checks/run-self-tests.py devtools/checks
@@ -127,7 +129,7 @@ A failure is fixed on the branch, never skipped.
 - **`/book:self-review` in a fresh context** (a subagent), never this session. A fix after it needs the
   checks again.
 - **`sh devtools/checks/ci-local.sh`** on the last commit; paste its *Local CI* section.
-- **The pull request:** `factory pr open`, only when the person asks. Its description names the
+- **The pull request:** `book pr open`, only when the person asks. Its description names the
   release, the counts from the report, every conflict and how it was resolved, the settings added by
   hand, and the *AI files* line (an upgrade changes the files that steer the AI, so an owner approves).
 

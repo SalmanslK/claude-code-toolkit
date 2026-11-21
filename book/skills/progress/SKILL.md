@@ -113,4 +113,4 @@ was **not** changed and why — a merge with no task, a branch too quiet to call
 - Drift between a plan and the code found on the way: `/book:check-docs`.
 - Asks of people and decisions awaited, which no task row holds: the person's private tracker,
   linking to the Book for the rest.
-- **In a flow** (`/book:flow`): `weekly-sweep` → done; `new-fsd-revision` → done; `qa-artifacts-changed` → done; `finish-feature` → done; `after-merge` → `/publish-guides`; `qa-build` → `/book:fact-check`; `status-report` → `/book:write-for`.
+- **In a flow** (`/book:flow`): `weekly-sweep` → done; `new-fsd-revision` → done; `qa-artifacts-changed` → done; `finish-feature` → done; `after-merge` → `/book:publish-guides`; `qa-build` → `/book:fact-check`; `status-report` → `/book:write-for`.

@@ -10,7 +10,7 @@
 3. `/book:update-docs` — where the code is trusted; applies.
 4. `/book:check-permissions all` — the FSD's role rules against authorization §2 and the code; reports.
 5. `/book:trim`.
-6. `/check-guides`.
+6. `/book:check-guides`.
 
 ## Loops
 

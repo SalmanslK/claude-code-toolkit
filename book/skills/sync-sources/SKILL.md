@@ -20,6 +20,8 @@ phase names the skill that owns it — load that skill and follow it. What this 
 Its helper scripts are in [`${CLAUDE_SKILL_DIR}/scripts/`](scripts/); run them from the repository root. Read
 [`references/parallel-agents.md`](references/parallel-agents.md) before fanning out to subagents.
 
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+
 ## Why this order
 
 1. **Requirements first.** Every later judgement is "does X match the FSD", and an audit against a
@@ -41,7 +43,7 @@ Its helper scripts are in [`${CLAUDE_SKILL_DIR}/scripts/`](scripts/); run them f
 
 **The last sync** is the line `**Last requirements sync:**` under `project.md` Part 3 — its date,
 the `dev` commit it reached, its mode and its tokens. Every pass rewrites it (wrap-up). The delta set
-is what changed under `docs`, `CLAUDE.md` and `README.md` since that commit — `factory sync-plan`
+is what changed under `docs`, `CLAUDE.md` and `README.md` since that commit — `book sync-plan`
 lists it — **plus** every doc that cites a section this pass's FSD change list names, which you add
 after Phase 1. No such line: run **full**. *Why:* searching merge messages for "sync" also finds
 FE-guide refreshes, which are not a sync.
@@ -56,7 +58,7 @@ and say which applied, in the report:
 
 ## Phase 0 — Preflight
 
-- **Run `python devtools/factory/factory.py sync-plan`** (`--mode full|verify-only` when the person
+- **Run `python devtools/book.py sync-plan`** (`--mode full|verify-only` when the person
   asked for one). Read-only: it fetches, then prints the real state of the checkout (a status
   captured at session start can be out of date), the pinned `origin/dev` and `origin/qa` SHAs, the
   last-sync line, the suggested mode, the delta set, QA's deployed commit, DEV minus QA, and the skip
@@ -64,7 +66,7 @@ and say which applied, in the report:
   re-base.
 - **The QA baseline is the commit deployed on the QA server**, not the `qa` branch: nothing deploys
   from `qa` yet, and the QA environment runs `dev` with the QA overlay
-  ([CLAUDE.md, *Branches*](CLAUDE.md#branches)). `sync-plan` reads it through `factory deploy
+  ([CLAUDE.md, *Branches*](CLAUDE.md#branches)). `sync-plan` reads it through `book deploy
   status --target qa` and prints a `→ baseline:` line. *From the ledger — NOT a live read*: say so
   and ask the person to confirm it. *none* (`COULD NOT READ` and no ledger record): stop and ask;
   never fall back to the `qa` branch, which it prints for reference only.
@@ -194,7 +196,7 @@ Commit.
 3. `/book:self-review`, then `/book:ship` on the same commit — the description (add the baseline SHAs
    `sync-plan` pinned), and the push and pull request only when the person asks. Any later commit
    needs both again.
-4. Offer `/publish-guides` if an FE guide changed, and `/book:progress` if tasks moved.
+4. Offer `/book:publish-guides` if an FE guide changed, and `/book:progress` if tasks moved.
 5. **The final report goes outside the repository**, to the person's own folder for written
    reports, or a path they name — `CLAUDE.md`'s ownership table has no home for a run report.
 
@@ -224,17 +226,17 @@ Commit.
 
 | Script | Replaces |
 |---|---|
-| *(the repo's own)* `factory sync-plan [--mode M]` | Phase 0 by hand — the fetch, the pinned SHAs, the last-sync line, the delta set, QA's deployed commit and DEV minus QA; read-only, and it decides no skip rule |
+| *(the repo's own)* `book sync-plan [--mode M]` | Phase 0 by hand — the fetch, the pinned SHAs, the last-sync line, the delta set, QA's deployed commit and DEV minus QA; read-only, and it decides no skip rule |
 | `heading_guard.py [--since REF] [--claims]` | Hand-diffing headings after a compression pass; `--claims` also ids, link targets and numbers |
 | *(the repo's own)* `check-book.py` | Every agent writing its own link checker or duplicate-id hunt — it checks every link, anchor, owner and D/Q id, and runs on every commit |
 | *(the repo's own)* `task-evidence.py --since REF` | Sorting a range of merges by hand — it lists each PR with its plans and ids |
 | `id_status.py [root]` | Reading every doc to find stale Q and D statuses; its section 2 is candidates only |
 | `fsd_diff.py OLD NEW --out DIR` | Ad-hoc `pdftotext` diffing and section sizing |
-| `fsd_comments.py JSON --since TS [--out DIR]` | Hand-parsing the Drive connector's comment JSON, when `factory fsd-threads` cannot run |
+| `fsd_comments.py JSON --since TS [--out DIR]` | Hand-parsing the Drive connector's comment JSON, when `book fsd-threads` cannot run |
 
 ## What next
 
-- The pull request, when the person asks; then `/publish-guides` and `/book:progress`
+- The pull request, when the person asks; then `/book:publish-guides` and `/book:progress`
   where the wrap-up offered them.
 - Each mismatch Phase 5 logged: its own `fix/D<n>-…` branch later, never in this pass.
 - **In a flow** (`/book:flow`): `new-fsd-revision` → `/book:fact-check`; `answers-arrived` → `/book:raise`.

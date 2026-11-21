@@ -1,6 +1,6 @@
 # Bitbucket — what the PR tool sends, and what Bitbucket does with it
 
-Every call goes through `python3 devtools/factory/factory.py pr …`
+Every call goes through `python3 devtools/book.py pr …`
 ([`devtools/factory/bitbucket.py`](devtools/factory/bitbucket.py) does the HTTP).
 The token is read inside that process and never reaches this session — see
 [Credentials](../SKILL.md#credentials). This file is what the API accepts and refuses, so a

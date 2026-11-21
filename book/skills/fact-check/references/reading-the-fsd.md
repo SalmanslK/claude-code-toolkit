@@ -11,11 +11,11 @@ to any of them.
 `- > file`. Every recipe below prints or pipes; none leaves a file behind.
 
 **Read the section, not the document.** The FSD is hundreds of pages; a requirement needs one or
-two. Locate, then print only those pages — **`factory fsd-page` does both**:
+two. Locate, then print only those pages — **`book fsd-page` does both**:
 
 ```bash
-python3 devtools/factory/factory.py fsd-page "Log In"           # the highest V<n>, its pages, the command to print them
-python3 devtools/factory/factory.py fsd-page "Log In" --print   # and those pages' text
+python3 devtools/book.py fsd-page "Log In"           # the highest V<n>, its pages, the command to print them
+python3 devtools/book.py fsd-page "Log In" --print   # and those pages' text
 ```
 
 It takes the heading as the contents print it (the FSD has no section numbers), finds it in the

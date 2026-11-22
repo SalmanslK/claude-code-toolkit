@@ -56,3 +56,9 @@ Client-specific data (calibration sets, estimate registers, team rosters) is del
 
 [`prompts/reusable-prompts.md`](prompts/reusable-prompts.md) — 106 reusable prompts for C# engineers (issue
 resolution, code review, documentation, architecture, testing, database, deployment and more).
+
+## Licence
+
+Licensed for use only: see [LICENSE](LICENSE). You may install and use it in the projects you
+work on; you may not redistribute it, or present it as your own, without the author's written
+permission. Copyright (c) 2026 Salman Khan.

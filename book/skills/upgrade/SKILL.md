@@ -5,7 +5,7 @@ description: >
   release". Runs the drift report, stops on conflicts, applies what the project never changed, carries
   the new settings by hand, then verify, review, local CI and the pull request. Not for a new Book or
   verifying one (/book:setup). Formerly /book-upgrade.
-allowed-tools: Read, Grep, Glob, Bash(git status*), Bash(git log*), Bash(git diff*), Bash(git fetch*), Bash(git show*), Bash(git branch --show-current*), Bash(python devtools/book.py verify*), Bash(python devtools/factory/factory.py book verify*), Bash(python3 devtools/book.py verify*), Bash(python3 devtools/factory/factory.py book verify*), Bash(python devtools/checks/check-*), Bash(python3 devtools/checks/check-*), Bash(python devtools/checks/run-self-tests.py*), Bash(python3 devtools/checks/run-self-tests.py*), Bash(sh devtools/checks/ci-local.sh*)
+allowed-tools: Read, Grep, Glob, Bash(git status*), Bash(git log*), Bash(git diff*), Bash(git fetch*), Bash(git show*), Bash(git branch --show-current*), Bash(python devtools/book.py verify*), Bash(python3 devtools/book.py verify*), Bash(python devtools/checks/check-*), Bash(python3 devtools/checks/check-*), Bash(python devtools/checks/run-self-tests.py*), Bash(python3 devtools/checks/run-self-tests.py*), Bash(sh devtools/checks/ci-local.sh*)
 ---
 
 # /book:upgrade — the project's Book, at the newer release
@@ -15,7 +15,7 @@ template's checkout) says, for every file the template owns, whether the project
 copy. This skill runs it, shows the person what it means, applies only what they approve, and carries
 over by hand what the tool never writes. One project, one branch, one pull request.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Must never
 
@@ -89,6 +89,17 @@ Each file the template owns gets one state:
 
 Show the person the counts, every `CONFLICT`, `REMOVED`, `DROPPED` and `UNKNOWN` file, and the diffs
 of what would be written. **Then stop for their approval.**
+
+**The old names' stubs.** Going to template 1.5.0 or later, each rename stub still under
+`.claude/skills/` is `DROPPED`, and the report's note names the `/book:` skill each points at. The old
+names stop working after this upgrade: delete those folders in the same pull request, and tell the team
+the new names (the AI guide's *Old names* table lists them).
+
+**Long-lived branches older than v1.4.0, going to 1.5.0.** Nothing to do first: never ask the person to
+promote the base branch into `qa`, `uat` or `main` to take 1.5, which would release unfinished work. From
+template 1.5.0 the pipelines' AI-files step judges a pull request into a branch whose Book is older than
+v1.4.0 with that branch's own `factory.py`, as before, until a promotion brings it 1.5. The report names each
+such protected branch for information; pass the note on and carry on.
 
 **Read `REMOVED` twice.** A pack file whose path the template renames with the project's name, while
 the project kept the old path, shows as `REMOVED` though it is there. Find it by content before

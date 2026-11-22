@@ -23,5 +23,5 @@ run `book reviewed`. `/book:self-review` gives the verdict; you are a second pai
    A check that could not run is reported as not run, never as passed.
 5. Report: findings first, each with `path:line`, the rule (quote the `CLAUDE.md` line) and the fix;
    then what you checked and found clean. No finding is a matter of taste: name the rule or drop it.
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 

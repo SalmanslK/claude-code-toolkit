@@ -20,7 +20,7 @@ phase names the skill that owns it — load that skill and follow it. What this 
 Its helper scripts are in [`${CLAUDE_SKILL_DIR}/scripts/`](scripts/); run them from the repository root. Read
 [`references/parallel-agents.md`](references/parallel-agents.md) before fanning out to subagents.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Why this order
 

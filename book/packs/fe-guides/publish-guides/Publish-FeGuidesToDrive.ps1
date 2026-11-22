@@ -34,8 +34,7 @@ The rclone remote name. Default: gdrive.
 .PARAMETER FolderId
 The Drive folder id the guides are published to. Default: [fe_guides]
 drive_folder_id in devtools/factory/factory.toml — its one owner — read through
-`python devtools/book.py config fe_guides.drive_folder_id` (`devtools/factory/factory.py` on a Book
-before v1.4.0), so it is never repeated here. Run from the project's root: the script lives in the book
+`python devtools/book.py config fe_guides.drive_folder_id`, so it is never repeated here. Run from the project's root: the script lives in the book
 plugin, and the repository is the current directory's.
 
 .PARAMETER RenameMap
@@ -186,21 +185,19 @@ function Write-StagedGuide {
 
 function Get-ConfiguredFolderId {
     # The folder id has one owner, [fe_guides] drive_folder_id in factory.toml. The Book's command reads it
-    # with Python's own TOML parser rather than a second parser here: devtools\book.py from Book v1.4.0,
-    # devtools\factory\factory.py before it.
+    # with Python's own TOML parser rather than a second parser here: devtools\book.py.
     param([string]$RepoRoot)
-    $factory = Join-Path $RepoRoot 'devtools\book.py'
-    if (-not (Test-Path -LiteralPath $factory -PathType Leaf)) { $factory = Join-Path $RepoRoot 'devtools\factory\factory.py' }
+    $book = Join-Path $RepoRoot 'devtools\book.py'
     $ErrorActionPreference = 'Continue'  # a missing or stub interpreter writes to stderr; try the next
     foreach ($candidate in @(@('python3'), @('python'), @('py', '-3'))) {
         $command = Get-Command $candidate[0] -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
         if (-not $command) { continue }
-        $arguments = @($candidate | Select-Object -Skip 1) + @($factory, 'config', 'fe_guides.drive_folder_id')
+        $arguments = @($candidate | Select-Object -Skip 1) + @($book, 'config', 'fe_guides.drive_folder_id')
         $out = & $command.Source @arguments 2>$null
         $value = (@($out) -join '').Trim()
         if ($LASTEXITCODE -eq 0 -and $value -match '^[\w-]+$') { return $value }
     }
-    throw 'Could not read fe_guides.drive_folder_id from devtools/factory/factory.toml (factory.py needs Python 3.11+ as python3, python or py). Pass -FolderId to override.'
+    throw 'Could not read fe_guides.drive_folder_id from devtools/factory/factory.toml (devtools/book.py needs Python 3.11+ as python3, python or py). Pass -FolderId to override.'
 }
 
 function Get-PublishedCommit {

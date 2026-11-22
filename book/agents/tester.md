@@ -20,5 +20,5 @@ You prove the Book's tooling works. Read `tests/CLAUDE.md` first.
    test is about it. Show it failing, then passing.
 5. Never skip, delete or weaken a failing test, and never change the code under test to make a test pass
    without saying so. Never run a deploy, SSH, or anything that reaches the network.
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 

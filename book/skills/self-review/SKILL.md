@@ -5,7 +5,7 @@ description: >
   against the team's review checklist. Read-only: prints a READY or NOT READY verdict
   and records it, which `book pr open` requires. For an
   open PR use book:peer-review; for FSD traceability, book:fact-check. Formerly /review-branch.
-allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py reviewed *), Bash(python3 devtools/factory/factory.py reviewed *), Bash(python devtools/book.py reviewed *), Bash(python devtools/factory/factory.py reviewed *), Bash(python3 devtools/book.py fingerprint), Bash(python3 devtools/factory/factory.py fingerprint), Bash(python devtools/book.py fingerprint), Bash(python devtools/factory/factory.py fingerprint), Bash(python3 devtools/book.py review-scope*), Bash(python3 devtools/factory/factory.py review-scope*), Bash(python devtools/book.py review-scope*), Bash(python devtools/factory/factory.py review-scope*), Bash(git diff*), Bash(git log*), Bash(git status*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git ls-files*), Bash(git show*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
+allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py reviewed *), Bash(python devtools/book.py reviewed *), Bash(python3 devtools/book.py fingerprint), Bash(python devtools/book.py fingerprint), Bash(python3 devtools/book.py review-scope*), Bash(python devtools/book.py review-scope*), Bash(git diff*), Bash(git log*), Bash(git status*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git ls-files*), Bash(git show*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
 ---
 
 You are a senior/architect-level engineer performing a strict, evidence-based
@@ -22,7 +22,7 @@ fixes the code it is reviewing, and never commits — that is
 
 **Run it in a fresh session or a subagent, never in the session that wrote the change** (CLAUDE.md, Working with AI here).
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ---
 

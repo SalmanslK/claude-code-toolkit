@@ -4,7 +4,7 @@ description: >
   Use to check who may do what: FSD role rules changed, a module added, before a QA build. Sets the
   FSD's role rules against authorization §2 and the code; reports gaps. Writes nothing.
 argument-hint: "[module | branch | all]"
-allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git grep*), Bash(git ls-files*), Bash(git branch*), Bash(python devtools/book.py fsd-page*), Bash(python3 devtools/book.py fsd-page*), Bash(python devtools/factory/factory.py fsd-page*), Bash(python3 devtools/factory/factory.py fsd-page*), Bash(pdftotext *), Bash(python "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*)
+allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git grep*), Bash(git ls-files*), Bash(git branch*), Bash(python devtools/book.py fsd-page*), Bash(python3 devtools/book.py fsd-page*), Bash(pdftotext *), Bash(python "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/permission_map.py"*)
 ---
 
 # /book:check-permissions [module | branch | all] — who may do what, three ways
@@ -28,7 +28,7 @@ Roles are data in the Book: only the Administrator is seeded, and every other ro
 the role API. So "role X may delete" is checked as **"a permission exists for delete, gates the delete
 route, and the FSD's roles can be given it"** — not as a seeded grant.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Scope — decide it first
 

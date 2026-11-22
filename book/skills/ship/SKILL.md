@@ -13,7 +13,7 @@ Takes a reviewed work branch to an opened pull request. The rules are
 [devtools, `factory/`](devtools/README.md#factory--the-book-cli). This skill
 does not restate them — it runs them in order and stops at the first that fails.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Step 0 — Where you are
 

@@ -27,7 +27,7 @@ the report with which module was not audited and why. No PDF at all: stop before
 anything is written and tell the person. One unreadable requirement in an
 otherwise readable section is `UNVERIFIED` with the reason.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ---
 

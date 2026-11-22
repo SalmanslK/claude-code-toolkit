@@ -13,12 +13,12 @@ team's Google Drive folder**.
 The guides are written for a team that does not read this repository. They read
 the Drive folder — `https://drive.google.com/drive/folders/<id>`, its id owned by
 `[fe_guides] drive_folder_id` in `devtools/factory/factory.toml` and printed by
-`python devtools/book.py config fe_guides.drive_folder_id` (`devtools/factory/factory.py` before Book v1.4.0)
+`python devtools/book.py config fe_guides.drive_folder_id`
 — one Google Doc per guide — and they bookmark, link and comment on those Docs.
 That is what makes this more than an upload: **a Doc's URL is a promise**, and
 this skill keeps it.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Before you start: this Book has the fe-guides pack
 

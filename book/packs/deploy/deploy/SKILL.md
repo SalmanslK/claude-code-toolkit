@@ -23,7 +23,7 @@ a deploy: each environment's commit, when it went live, and how far it is behind
 the host cannot be reached it shows the deploy ledger's last record, labelled as not a live read. The
 report step adds to that ledger.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Before you start: this Book has the deploy pack, and its settings
 

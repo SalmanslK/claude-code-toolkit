@@ -5,7 +5,7 @@ description: >
   on". Lists the modules, requirement ids, tests to run, FE guides, plans and generated docs to update,
   and the risk tier. Changes no code. Not for a review (book:self-review) or an audit (book:fact-check).
   Formerly /change-impact.
-allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py impact*), Bash(python3 devtools/factory/factory.py impact*), Bash(python devtools/book.py impact*), Bash(python devtools/factory/factory.py impact*), Bash(git diff*), Bash(git log*), Bash(git status*)
+allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py impact*), Bash(python devtools/book.py impact*), Bash(git diff*), Bash(git log*), Bash(git status*)
 ---
 
 # Impact analyzer
@@ -13,7 +13,7 @@ allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py impact*), Bash(py
 Answers one question: **what does this change reach?** The deterministic part is
 `book impact`; this skill adds what a path map cannot see. It changes no code.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Input — one of
 

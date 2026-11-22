@@ -43,8 +43,8 @@ integration and debugging, project manager, React front end, tester. Maintained 
 
 | Folder | What | Maintained in |
 |---|---|---|
-| `book/skills/`, `book/agents/` | The book plugin's 21 core skills (`/book:flow`, `/book:self-review`, `/book:check-permissions`, …) and its 2 agents — v0.5.1 | [book-plugin](https://github.com/SalmanslK/book-plugin) |
-| `book/packs/fe-guides/`, `book/packs/deploy/` | The packs' skills: `/book:check-guides`, `/book:publish-guides`, `/book:release-notes`, `/book:deploy` — in the plugin since v0.5.0 (boilerplate v1.4.0 keeps only stubs under the old names) | [book-plugin](https://github.com/SalmanslK/book-plugin) |
+| `book/skills/`, `book/agents/` | The book plugin's 21 core skills (`/book:flow`, `/book:self-review`, `/book:check-permissions`, …) and its 2 agents — v0.6.0 | [book-plugin](https://github.com/SalmanslK/book-plugin) |
+| `book/packs/fe-guides/`, `book/packs/deploy/` | The packs' skills: `/book:check-guides`, `/book:publish-guides`, `/book:release-notes`, `/book:deploy` — in the plugin since v0.5.0; the old names were retired in boilerplate v1.5.0 | [book-plugin](https://github.com/SalmanslK/book-plugin) |
 | `factory/` | The Factory skill, which builds a new Book | [ai-factory-kit](https://github.com/SalmanslK/ai-factory-kit) |
 
 Change them there, not here, or the next copy overwrites the change. To use them, install the plugin

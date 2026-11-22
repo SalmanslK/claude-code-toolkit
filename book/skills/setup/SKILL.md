@@ -16,7 +16,7 @@ only a person can give, puts each one into the parameter file, and reports what 
 Nothing is guessed: an answer the person has not given stays an empty string, which leaves a
 `<!-- FILL -->` slot that verify reports as `TO FILL`.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ## Must never
 
@@ -101,7 +101,7 @@ It copies the template's files with the names replaced, writes skeletons with `<
 keeps empty folders with `.gitkeep`, stages exactly what it created, switches the hooks on
 (greenfield), regenerates the rules table, then runs verify. Run it again at any time: it creates
 nothing that exists. A template other than this repository's is the template's own
-`factory.py book init --target <this repo>`. Init writes the template version into `factory.toml`
+`python <template>/devtools/book.py init --params book.toml --target <this repo>`. Init writes the template version into `factory.toml`
 `book_version`, which upgrade reads.
 
 ### 5. Upgrade, when a newer template is out

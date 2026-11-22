@@ -22,7 +22,7 @@ goodwill. Worse, **a plan built on a section that has since changed is confident
 wrong**, and nothing in the code, tests or docs will contradict it. Every other skill
 reasons from the snapshot, so run this **first** when requirements are in play.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ---
 

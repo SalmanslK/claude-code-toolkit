@@ -23,7 +23,7 @@ table, with the shapes beneath it. No new document. Once built, §6 becomes link
 `api-contracts.md` (generated) and the module's FE guide,
 as the template says.
 
-*The Book's command is `book`: `python devtools/book.py <command>` from the project's root. On a Book before v1.4.0, which has no `devtools/book.py`, run `python devtools/factory/factory.py <command>`; `book verify`, `init` and `upgrade` are `factory.py book verify` and so on there.*
+*The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
 
 ---
 

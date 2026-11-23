@@ -28,7 +28,7 @@ reasons from the snapshot, so run this **first** when requirements are in play.
 
 ## Blocked means stop
 
-[CLAUDE.md's rule](CLAUDE.md#how-these-instructions-are-organised), here: **if a source
+CLAUDE.md's rule, here: **if a source
 cannot be read** — the connector fails, a permission is refused, the guard refuses a step, an
 export is not available — **finish reading the sources you can, then stop before Phase 4 and
 tell the person** which could not be read, why, and the one thing that would unblock each
@@ -42,7 +42,7 @@ the report then names as **could not check**.
 ## The sources
 
 **Start with `python3 devtools/book.py requirements status`** — read-only and
-offline. From [`requirements/read-me.txt`](requirements/read-me.txt) (the root index,
+offline. From `requirements/read-me.txt` (the root index,
 and the **one place every live link is kept** — its *LINKS*, never hard-coded here) and the
 folders beside it, it prints one line per source: its live link or what the index records
 instead (none, not shared, not set up — with the reason — or a `<link>` placeholder), our
@@ -54,22 +54,22 @@ those, below. The table covers the sources this skill's capture machinery applie
 | Source | Live | Our copy | Authority |
 |---|---|---|---|
 | **FSD** | Google **Doc** — **text *and* comment threads** | `requirements/fsd/… - V<n>.pdf` (text); the comment threads are read live every run and saved as `comment-threads - <date>.md` | **Source of truth. Wins every conflict.** The BA answers developers' questions *in the comments*, often without touching the text |
-| **Permissions matrix** | **None exists** — permissions come from the FSD ([CLAUDE.md, *Layout*](CLAUDE.md#layout)) | `requirements/permissions-matrix/`, empty | If one is ever shared: a Google Sheet below the FSD, captured as `V<n>.pdf` and **read as CSV, never from the PDF** |
+| **Permissions matrix** | **If the project has one** (`requirements/read-me.txt` says); otherwise permissions come from the FSD (CLAUDE.md, *Layout*) | `requirements/permissions-matrix/`, empty when there is none | If one is ever shared: a Google Sheet below the FSD, captured as `V<n>.pdf` and **read as CSV, never from the PDF** |
 | **QA artifacts** | A Drive **folder** plus two **Sheets** | `requirements/qa-artifacts/`, unversioned | **Not a requirement source** (below) |
 | **Product Q&A** | Google **Doc** | `requirements/product-questions-and-answers/…` | Answers outside the FSD proper; same `V<n>.pdf` scheme as the FSD |
 | **FE integration bugs** | Google **Sheet** | `requirements/fe-integration-bugs/`, unversioned | Treated like QA artifacts — **not a requirement source** |
-| **Release Plan** | Google **Sheet** | `requirements/release-plan/`, `backup/`-with-date-suffix | The committed schedule — [`project.md`'s delivery pace](docs/project.md#delivery-pace). **A workbook can hold other projects' tabs:** capture only the tabs that are yours, each as its own CSV — never fetch, diff or capture the whole workbook. Tab ids are in *LINKS* (`gid=`) |
+| **Release Plan** | Google **Sheet** | `requirements/release-plan/`, `backup/`-with-date-suffix | The committed schedule — `project.md`'s delivery pace. **A workbook can hold other projects' tabs:** capture only the tabs that are yours, each as its own CSV — never fetch, diff or capture the whole workbook. Tab ids are in *LINKS* (`gid=`) |
 
 **Out of scope**, not worth fetching: `wireframes/` (Figma), and anything the root
 index marks as having no live source (`email-templates/`, the two loose PNGs,
 `fe-api-contracts/` — derived from the frontend's code, so "refresh" means
 re-deriving from that repo).
 
-**Build from the highest `V<n>`**, numerically ([CLAUDE.md, *Layout*](CLAUDE.md#layout)).
+**Build from the highest `V<n>`**, numerically (CLAUDE.md, *Layout*).
 
 ### The FSD wins, and QA does not count as a requirement
 
-[Which document wins](docs/open-questions.md#which-document-wins) settles it: a rule
+*Which document wins* (the project's `docs/open-questions.md`) settles it: a rule
 found only in a QA case or another supporting source is **a question for `open-questions.md`,
 never a rule to adopt**; confirmed in the FSD, it is corroboration worth citing.
 
@@ -160,12 +160,12 @@ categories Part 3 uses.
 ## Phase 4 — Capture (only what moved)
 
 **Where the capture goes.** A new snapshot and everything Phase 5 records with it are a
-general refresh — [docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on) says which branch; its pull
-request opens only when the person asks ([*Git*](CLAUDE.md#git)). Check the branch before
+general refresh — docs/CLAUDE.md, *Which branch a doc change goes on* says which branch; its pull
+request opens only when the person asks (CLAUDE.md, *Git*). Check the branch before
 the first write.
 
 **At most one capture per source per week** (Monday to Sunday) — the *Cadence* in
-[`requirements/read-me.txt`](requirements/read-me.txt). Before capturing, run
+`requirements/read-me.txt`. Before capturing, run
 `git fetch origin`, then `requirements status` again: its `capture:` field says whether this
 week's capture is taken — on `origin/dev`, this branch, or an unmerged `origin/chore/docs-*`
 branch (an open capture counts too). Only snapshot files count — a saved
@@ -197,15 +197,15 @@ Decode and verify every capture as the reference says, before treating it as goo
 ## Phase 5 — Record
 
 - **Answers from the FSD Doc's comments** go on the question they answer in
-  [`docs/open-questions.md`](docs/open-questions.md) — quoted, dated, marked
+  `docs/open-questions.md` — quoted, dated, marked
   as from a comment. No Part 3 section: Part 3 is the text's history. A comment that
   contradicts built code is a `defects.md` row.
 - **FSD and matrix revisions** append a section to
-  [`docs/project.md`](docs/project.md) **Part 3**, in the shape the existing
+  `docs/project.md` **Part 3**, in the shape the existing
   sections use: the short version, the numbered categories, how the comparison was
   produced. **Part 3 keeps only the latest comparison per source**: move the one it
   replaces, verbatim, to the top of
-  [`docs/archive/requirements-history.md`](docs/archive/requirements-history.md)
+  `docs/archive/requirements-history.md`
   in the same change.
 - **QA artifact and FE integration bug changes do not go in Part 3** — they are not
   requirements. Each produces one of: a **question** in `open-questions.md` (it states a
@@ -214,6 +214,16 @@ Decode and verify every capture as the reference says, before treating it as goo
   against our code (a person triages each entry); or **nothing**.
 - **Product Q&A changes** that answer an open question move it to *Resolved* with the
   date and the quoted answer.
+
+**Each question's State**, where the ledger keeps them (a Book from 1.6: the *Questions* rules in
+`.claude/book/docs.md`): from the threads read this run, propose each live question's next State —
+`OPEN · NOT POSTED` (no thread), `OPEN · POSTED` (a thread, no answer: **Posted** is its date and id),
+`ANSWERED · THREAD ONLY` (answered in the thread, not in the FSD text: **Answered** is the date and the role;
+it moves under *Answered, waiting for the FSD text*), or `RESOLVED` (the highest revision's text says it:
+**In FSD text** is `V<n> §x`; it moves to the archive with one line under *Resolved*). A question with no
+State line gets one. Show every proposal and write them only on the person's word; then list **what to
+post** (NOT POSTED questions), **what to ask the BA to add to the text** (THREAD ONLY) and **which threads
+to resolve** (RESOLVED with **Thread resolved:** no) — posting and resolving nothing yourself.
 
 Then check what any change lands on: **an open question now answered** — move it (the
 highest-value outcome of the skill); **a plan built on a changed section** — flag it,
@@ -253,7 +263,7 @@ comment answered goes on its question.
     and which questions they answer. "No new threads" is a result; "did not read them"
     is not an option
 5. **What it lands on** — questions answered, plans affected, contradictions with built
-   code, schedule impact
+   code, schedule impact; the States proposed, and what to post, ask to add or resolve
 6. **What was captured** — new filenames, and the Part 3 section added
 
 ---

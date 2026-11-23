@@ -6,10 +6,12 @@ description: >
   open-questions.md section in the house shape, with the next free id across every branch, and drafts
   any FSD comment without posting it. Not for fixing the defect.
 argument-hint: defect | question
-allowed-tools: Read, Grep, Glob, Bash(git status*), Bash(git log*), Bash(git show*), Bash(git fetch*), Bash(git branch*), Bash(python "${CLAUDE_SKILL_DIR}/scripts/next_id.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/next_id.py"*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/check-book.py*)
+allowed-tools: Read, Grep, Glob, Bash(git status*), Bash(git log*), Bash(git show*), Bash(git fetch*), Bash(git branch*), Bash(python "${CLAUDE_SKILL_DIR}/scripts/next_id.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/next_id.py"*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/book.py config*), Bash(python3 devtools/book.py config*)
 ---
 
 # /book:raise defect | question — one row, written right
+
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
 
 A defect or a question exists only once it is in its ledger: a finding left in a chat or a pull request
 dies with it. This skill writes **one** entry, in the shape `docs/CLAUDE.md` sets (*Defects*,
@@ -49,18 +51,28 @@ never guess a number. Re-run it just before the commit if the work took a while.
 
 - **Severity** as the ledger's key shows it; **Status** one of `Open` · `Mitigated` · `Partial` ·
   `Blocked — <Q id or party>`.
-- **Found by** starting with one of the fixed words (`Review`, `PR review`, `Spec audit`, `Requirements
-  check`, `Test`, `Guard/CI`, `While building`, `QA`, `Consumer`, `Client`, `Requirement change`), then
-  the detail: *PR review, PR #60*.
+- **Where the table has Type and Source columns** (a Book from 1.6): **Type** one of `spec-divergence` ·
+  `bug` · `regression` · `test-gap` · `security` · `data` · `config-infra` · `tooling-ci`, and **Source**
+  as `<source>: <reference>`, the source one of `qa` · `fe` · `ba-product` · `requirement-sync` ·
+  `code-review` · `audit` · `tests-ci` · `developer`: *code-review: PR #60*. What each means: the
+  *Defects* rules in `.claude/book/docs.md`. The Note ends with the day found: *found YYYY-MM-DD*.
+- **Where it has a Found by column instead** (an older Book): **Found by** starting with one of the fixed
+  words (`Review`, `PR review`, `Spec audit`, `Requirements check`, `Test`, `Guard/CI`, `While building`,
+  `QA`, `Consumer`, `Client`, `Requirement change`), then the detail: *PR review, PR #60*; the text ends
+  with **its class and the day found**: *Class: api-contract · found YYYY-MM-DD*, one class from the
+  table in `docs/CLAUDE.md`.
 - The text short (about 600 characters): what is wrong, where, the FSD section. The investigation goes
   in the commit or the PR, not the row.
-- Ending with **its class and the day found**: *Class: api-contract · found YYYY-MM-DD*, one class from
-  the table in `docs/CLAUDE.md`.
 
 **A question**, under *Still open* in `docs/open-questions.md`: a row in its summary table if the
 ledger keeps one, and a `#### Q<n> · <title>` section with `**Status:** OPEN · **Raised:** <date> ·
-**Area:** <topic>`, the question, and a `**Recommendation:**` line. A plan that depends on it lists the
-id in its open questions, and marks what it built on the recommendation `[PROPOSED]`.
+**Area:** <topic>` — and, where the ledger keeps question States (a Book from 1.6), under it `**State:** OPEN ·
+NOT POSTED · **Posted:** — · **Answered:** — · **In FSD text:** not yet · **Thread resolved:** no` — the question, and the recommendation line, headed as the project sets it:
+`[book] recommendation_heading`, read with `python devtools/book.py config book.recommendation_heading`
+(from Book 1.6 the settings are `factory.toml` over the Book's defaults; `"**What we suggest:**"`, say), or
+`**Recommendation:**` when it sets none. Copy an existing question's heading if unsure. A plan
+that depends on it lists the id in its open questions, and marks what it built on the recommendation
+`[PROPOSED]`.
 
 **The FSD comment** (a question for the client to answer in their document): draft it in the reply, in
 plain words with the recommendation. **Never post it** unless the person says so in this turn.
@@ -71,7 +83,7 @@ plain words with the recommendation. **Never post it** unless the person says so
 python devtools/checks/check-book.py
 ```
 
-It holds the status words, the class, *Found by* and duplicate ids *[enforced]*. Show the person the
+It holds the status words, the Type and Source (or, in an older Book, the class and *Found by*), the question State and duplicate ids *[enforced]*. Show the person the
 entry. **Which branch:** a defect the current work found or fixes stays on the work's branch; one raised
 on its own goes on a `chore/docs-<slug>` branch cut from the base with `--no-track` (`docs/CLAUDE.md`,
 *Which branch a doc change goes on*). Commit only when asked; the id goes in the fixing commit's message.

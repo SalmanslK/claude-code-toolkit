@@ -7,6 +7,8 @@ description: >
   or correcting a guide (that happens in the repository) or for any other Doc.
 ---
 
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
+
 You are publishing **the repository's front-end integration guides to the FE
 team's Google Drive folder**.
 

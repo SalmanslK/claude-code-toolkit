@@ -6,6 +6,8 @@ description: >
   of two disagreeing sources is right (book:check-consistency, book:check-docs). Formerly /docs-trim.
 ---
 
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
+
 You are gardening this repository's documentation: **minimum sufficient content
 that preserves everything needed to understand, build, audit, and correctly
 extend the system.** Not maximum documentation, not minimum documentation —
@@ -24,7 +26,7 @@ by density, never by word count alone.
 ## Which skill is this
 
 This one compares docs against their own purpose and size; the siblings, by
-what each compares, are the AI guide's [*Which docs skill*](AI-DEVELOPMENT-GUIDE.md#which-docs-skill) table.
+what each compares, are the AI guide's *Which docs skill* (the project's `AI-DEVELOPMENT-GUIDE.md`) table.
 
 **This skill does not settle who is right.** If a finding turns out to be a
 contradiction between two docs, or between a doc and the code, hand it to
@@ -39,9 +41,9 @@ job, not this one's.
 
 Everything under `docs/` (per `CLAUDE.md`'s ownership table) plus `CLAUDE.md`
 itself and `README.md`. A change to a `CLAUDE.md` file needs an owner's approval
-([CLAUDE.md, *Git*](CLAUDE.md#git)) and the guard asks first: propose it in the
+(CLAUDE.md, *Git*) and the guard asks first: propose it in the
 report, never apply it as a safe trim. **Not** `requirements/`
-([read-only](CLAUDE.md#layout)). **Not** `docs/archive/` — historical by
+(read-only: CLAUDE.md, *Layout*). **Not** `docs/archive/` — historical by
 definition; check only that it still reads as superseded, don't compress it.
 **Not** application code, and no code changes even if a doc turns out to describe
 dead behaviour — that's a `book:update-docs` or `book:check-docs` finding, not a
@@ -122,7 +124,7 @@ not `REMOVE`. [*What must survive*](../update-docs/SKILL.md#what-must-survive-no
 ### Phase 4 — Optimize (only after the person approves the report)
 
 **Where the edits go.** A trim is a general refresh, never on a feature branch
-([docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on)): check `git branch --show-current` before
+(docs/CLAUDE.md, *Which branch a doc change goes on*): check `git branch --show-current` before
 the first edit; on the wrong branch, stop and offer to cut one.
 
 Apply what the *Apply directly* column below covers; everything in *Ask first* waits
@@ -144,11 +146,11 @@ for the person's answer. For each:
   outright, don't comment out, but see "Do not delete" below for history that
   must be demoted instead of deleted.
 - **Never create a new markdown file** — the only routine new files are the ones
-  [`docs/CLAUDE.md`, *New files*](docs/CLAUDE.md#new-files) lists, and a trim
+  `docs/CLAUDE.md`, *New files* lists, and a trim
   creates none of them.
 
 **Do not delete history — demote it**, to the archive file
-[`docs/CLAUDE.md`'s table](docs/CLAUDE.md#current-state-not-history) names, leaving
+`docs/CLAUDE.md`'s table names, leaving
 the id or heading behind. History *presented as current guidance* must go; history
 labelled as history is the point, not a violation of "remove what's dead".
 
@@ -236,5 +238,5 @@ that's why `REVIEW` exists, and why it's never a shortcut to skip.
 - `REVIEW` items routed to `/book:check-docs`, `/book:check-consistency` or `/book:check-sources` —
   run those next.
 - Edits made: commit them on the `chore/docs-<slug>` branch; its pull request opens only
-  when the person asks ([CLAUDE.md, *Git*](CLAUDE.md#git)).
+  when the person asks (CLAUDE.md, *Git*).
 - **In a flow** (`/book:flow`): `docs-health` → `/book:check-guides`.

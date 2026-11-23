@@ -5,8 +5,10 @@ description: >
   against the team's review checklist. Read-only: prints a READY or NOT READY verdict
   and records it, which `book pr open` requires. For an
   open PR use book:peer-review; for FSD traceability, book:fact-check. Formerly /review-branch.
-allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py reviewed *), Bash(python devtools/book.py reviewed *), Bash(python3 devtools/book.py fingerprint), Bash(python devtools/book.py fingerprint), Bash(python3 devtools/book.py review-scope*), Bash(python devtools/book.py review-scope*), Bash(git diff*), Bash(git log*), Bash(git status*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git ls-files*), Bash(git show*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
+allowed-tools: Read, Grep, Glob, Bash(python3 devtools/book.py reviewed *), Bash(python devtools/book.py reviewed *), Bash(python3 devtools/book.py fingerprint), Bash(python devtools/book.py fingerprint), Bash(python3 devtools/book.py review-scope*), Bash(python devtools/book.py review-scope*), Bash(git diff*), Bash(git log*), Bash(git status*), Bash(git merge-base*), Bash(git rev-parse*), Bash(git ls-files*), Bash(git show*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/book.py fsd-page*), Bash(python devtools/book.py fsd-page*), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
 ---
+
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
 
 You are a senior/architect-level engineer performing a strict, evidence-based
 review of an entire feature branch before it is submitted for a Pull Request.
@@ -28,7 +30,7 @@ fixes the code it is reviewing, and never commits — that is
 
 ## The review framework
 
-The review checklist, shared with `/book:peer-review`, is 160 checks in 12 dimensions, in parts:
+The review checklist, shared with `/book:peer-review`, is 161 checks in 12 dimensions, in parts:
 the [method](../peer-review/references/review-method.md) (triage table, anti-noise rules, finding format,
 severity, the verdict, the coverage table), [Pass A, Conformance](../peer-review/references/review-pass-a.md)
 (always, first), and one file per Pass B dimension. **Read only the files
@@ -38,7 +40,7 @@ loads them all. A `book:<skill>/<path>` file is in this plugin, read it at `${CL
 committed or not, which on a stacked branch also holds the parent's paths — more files,
 never fewer.
 
-**160 checks are the coverage owed, not a target finding count.** A sound branch
+**161 checks are the coverage owed, not a target finding count.** A sound branch
 can produce zero findings.
 
 Two differences from running it against an open PR: there is no PR, so every
@@ -50,15 +52,16 @@ branch already changed under `docs/`.
 ## Steps
 
 1. **Fix the base, then classify.** `git fetch origin`, then
-   `BASE=$(git merge-base origin/dev HEAD)`. The change is **`git diff $BASE`**
+   `git merge-base origin/dev HEAD`, and write the sha it prints as `<base>` in the
+   commands that follow. The change is **`git diff <base>`**
    — committed *and* uncommitted, because `/book:commit` runs this review before the
    commit exists — plus `git ls-files --others --exclude-standard` (new files).
    Feature branches merge into `dev`; compare against `main` only for a
    promotion to production. **A branch stacked on another unmerged branch**
-   (its parent's commits appear in `git log $BASE..HEAD`, and the user named the
-   parent or it is the branch this one was cut from): `BASE` is the parent's tip
-   — say so in the summary. Run `git diff $BASE --stat` and
-   `git log $BASE..HEAD --oneline`, then run `book review-scope`, read the
+   (its parent's commits appear in `git log <base>..HEAD`, and the user named the
+   parent or it is the branch this one was cut from): `<base>` is the parent's tip
+   — say so in the summary. Run `git diff <base> --stat` and
+   `git log <base>..HEAD --oneline`, then run `book review-scope`, read the
    files it prints, and place every path in the method's triage table **before
    opening any changed file**.
    Then print the **fingerprint** of what you are about to review, the line
@@ -66,12 +69,8 @@ branch already changed under `docs/`.
    `python devtools/book.py fingerprint`. It fetches and hashes the
    change against `origin/dev` — committed, uncommitted and untracked — even on a
    stacked branch: it is `/book:commit`'s key, not the review's base. No hash printed
-   (fetch failed, no merge base): stop and say so. Shell variables do not survive
-   between tool calls, so set a variable in the same command that uses it. **That
-   command is the only fingerprint** — never hash the diff by hand. This skill comes
-   from the book plugin, the same in every worktree; reviewing a worktree whose Book
-   predates the plugin (its own full `.claude/skills/review-branch/SKILL.md`, not a
-   rename stub), follow that copy instead and say so — the Book it reviews is on it.
+   (fetch failed, no merge base): stop and say so. **That
+   command is the only fingerprint** — never hash the diff by hand.
 2. **Understand the objective**: the commit messages, then the plan section
    and FSD section(s) the change claims, per Pass A — that section's pages
    only — `book fsd-page "<heading>" --print`, by [Reading the FSD](../fact-check/references/reading-the-fsd.md).
@@ -120,7 +119,7 @@ Ordered **CRITICAL → HIGH → MEDIUM → LOW → INFO**, each in the full
 
 The [per-dimension table](../peer-review/references/review-method.md#coverage-summary)
 — Evaluated (finding count or "clean") or N/A with the reason, for all 12
-dimensions. Never the 160-item list.
+dimensions. Never the 161-item list.
 
 ### Positive Findings
 

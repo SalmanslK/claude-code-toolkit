@@ -142,7 +142,8 @@ bitten, or would be hurt most.
   database. Conflating them has caused rework twice.
 - **Authorization.** The `Permissions` catalogue and the seeded roles against
   `docs/plans/authorization.md` §2 (the project's plan),
-  which is drawn from the FSD — no permissions matrix exists (CLAUDE.md *Layout*) — and the
+  which is drawn from the FSD (and the permissions matrix, if the project has one: see
+  `requirements/read-me.txt`) — and the
   default-deny behaviour of a permission no role holds.
 - **Migrations against the model snapshot.**
 - **Feature plans versus what shipped**, especially anything still marked

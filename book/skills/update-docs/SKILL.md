@@ -20,7 +20,7 @@ it wrong and you will faithfully document a bug as a design.
 ## Which skill is this
 
 One-way, for a change **you performed**; the siblings, by what each compares, are
-the AI guide's [*Which docs skill*](AI-DEVELOPMENT-GUIDE.md#which-docs-skill) table. Run `book:check-sources` first if the docs cite an FSD
+the AI guide's *Which docs skill* (the project's `AI-DEVELOPMENT-GUIDE.md`) table. Run `book:check-sources` first if the docs cite an FSD
 section you are about to rewrite.
 
 **If you find yourself unsure whether the code is correct, stop and run
@@ -53,7 +53,7 @@ Only documentation we write and maintain:
 
 ## What you must not touch
 
-**`requirements/`** is [read-only](CLAUDE.md#layout): evidence, never a target. If the
+**`requirements/`** is *read-only* (the project's `CLAUDE.md`): evidence, never a target. If the
 code disagrees with the FSD, **that is not a documentation problem** — see the stop
 conditions below.
 
@@ -62,7 +62,7 @@ still labelled as superseded.
 
 **Generated docs** — `docs/api/api-contracts.md`, `docs/database-erd.md`, the generated
 tables in `project.md` — are regenerated, never edited
-([`docs/CLAUDE.md`, *Generated*](docs/CLAUDE.md#generated--never-hand-edit)).
+(`docs/CLAUDE.md`, *Generated*).
 
 **Implementation code**, beyond a comment that states something untrue.
 
@@ -110,7 +110,7 @@ In every case: **finish the rest of the pass, and list what you stopped on.**
 
 ## The pass
 
-**Where the edits go:** [docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on) — check the branch
+**Where the edits go:** docs/CLAUDE.md, *Which branch a doc change goes on* — check the branch
 before the first edit.
 
 **Read `../check-docs/references/comparison-checklist.md`** and work through
@@ -129,7 +129,7 @@ and diagrams. Where the checklist says *compare*, you **update the documentation
 ## A built module's FE guide
 
 A built module's guide in `docs/fe-integration-guides/` is **our implementation as shipped**
-([`docs/CLAUDE.md`, *Front-end documents*](docs/CLAUDE.md#front-end-documents)), so the
+(`docs/CLAUDE.md`, *Front-end documents*), so the
 pass brings it in line too. A module with no guide yet is not this skill's: its contract is
 drafted by `/book:outline-api`, and its guide is written when it ships.
 
@@ -160,9 +160,9 @@ date line satisfies the check, not this pass.
 
 ## House rules that still apply
 
-This skill edits documentation, so these bind it: [one topic, one owner](CLAUDE.md#where-knowledge-lives);
-[no new file](docs/CLAUDE.md#new-files) and [no deleted history](docs/CLAUDE.md#current-state-not-history);
-[a question to `open-questions.md`](CLAUDE.md#features), never answered by guesswork.
+This skill edits documentation, so these bind it: *one topic, one owner* (the project's `CLAUDE.md`);
+*no new file* (the project's `docs/CLAUDE.md`) and *no deleted history* (the project's `docs/CLAUDE.md`);
+*a question to `open-questions.md`* (the project's `CLAUDE.md`), never answered by guesswork.
 
 Run `python3 devtools/checks/check-book.py` when you are done — it checks every
 link and anchor, every document's owner, and history in live documents.
@@ -203,5 +203,5 @@ cannot tell you the answer, say that it cannot.
 - A stop condition hit: `/book:check-docs` on that area, or a `defects.md` row or question.
 - An FE guide changed: `/book:publish-guides`, so the front end's Drive copy matches.
 - Edits on a `chore/docs-<slug>` branch: its pull request opens only when the person asks
-  ([CLAUDE.md, *Git*](CLAUDE.md#git)).
+  (CLAUDE.md, *Git*).
 - **In a flow** (`/book:flow`): `finish-feature` → `/book:publish-guides`; `docs-health` → `/book:check-permissions`.

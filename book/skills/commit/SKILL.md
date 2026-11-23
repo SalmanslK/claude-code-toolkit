@@ -35,8 +35,8 @@ session's start folder, whose branch may hold an older copy.
 **A `READY` verdict from a `/book:self-review` run in a fresh context — a subagent, or another
 session — whose `Fingerprint:` line equals this hash stands** — a verdict with no such line does not — say so in one line and go to Step 2. Anything else —
 no verdict, a different fingerprint, a `NOT READY`, or a review run inline in the session that
-wrote the change — run the `book:self-review` skill **in a subagent** ([CLAUDE.md, *Working with AI
-here*](CLAUDE.md#working-with-ai-here)) and wait for its full output.
+wrote the change — run the `book:self-review` skill **in a subagent** (CLAUDE.md, *Working with AI
+here*) and wait for its full output.
 
 - **"NOT READY – Fix blockers before submitting PR"**: show the blockers and
   **stop**. Do not commit.
@@ -44,6 +44,12 @@ here*](CLAUDE.md#working-with-ai-here)) and wait for its full output.
 - **The review stopped without a verdict** (it was blocked — an FSD section it could not
   read, a fetch that failed): relay what blocked it and **stop**. No verdict is not a
   READY.
+
+**The review guards the push, not each commit.** `book pr open` refuses a pull request without a
+READY verdict for its HEAD, so a recipe that commits several times and reviews once at its end —
+`/book:sync-sources` commits once per phase, then runs `/book:self-review` and `/book:ship` at its
+wrap-up — skips this step for its phase commits: say so in one line and go to Step 2. Outside such a
+recipe, review here: a commit the person asked for alone is the change they are about to push.
 
 ## Step 2 — Group by concern
 
@@ -57,17 +63,17 @@ meaningful, in this order:
 4. **Documentation** (`CLAUDE.md`, `docs/`, README)
 
 Two exceptions keep a group together: a behaviour change and **the doc that owns
-it** go in the same commit ([CLAUDE.md, *Features*](CLAUDE.md#features)), and so do
+it** go in the same commit (CLAUDE.md, *Features*), and so do
 a migration and its regenerated ERD.
 
-**A general doc refresh is not this branch's** ([docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on)).
+**A general doc refresh is not this branch's** (docs/CLAUDE.md, *Which branch a doc change goes on*).
 If a doc group holds one, leave it uncommitted, name it in the Result, and offer
 `git checkout --no-track -b chore/docs-<slug> origin/dev` for it.
 
 For each group: `git add` only its files, write its message (Step 3), commit
 (Step 4). The Step 1 review covered the whole change; it is not repeated per group.
 
-**Tests, once, before the first commit** ([CLAUDE.md, *Building and testing*](CLAUDE.md#building-and-testing)).
+**Tests, once, before the first commit** (CLAUDE.md, *Building and testing*).
 `python devtools/book.py impact --ci` prints `tier=`, `filter=` and `reason=` — never
 work a tier out by hand:
 
@@ -77,7 +83,7 @@ work a tier out by hand:
 | `build` | `[commands] build`, then `[commands] test` |
 | `modules`, `full` | `build`, then `[commands] integration` with the printed filter |
 
-Read the executed, passed and skipped counts ([`tests/CLAUDE.md`](tests/CLAUDE.md#choosing-what-to-run)):
+Read the executed, passed and skipped counts (`tests/CLAUDE.md`):
 a failure, an integration skip, or `0` executed **stops here** — nothing is committed. If
 `book impact` fails, say so and stop.
 
@@ -104,12 +110,16 @@ Keep a deleted user's email reusable by ordering the lookup (D2)
 
 Write the message (the Write tool) to a file **outside the repository** — the session's
 scratchpad, else the system temp folder — check it with the commit-msg hook's own script, and
-commit from that file only when it passes. Spell the path out literally in both commands; the
-guard refuses a path held in a shell variable:
+commit from that file only when it passes. Spell the path out literally in both commands: the
+guard reads the command's text, so a path held in a shell variable (`$MSG`) may be refused where
+the same path written out passes, and a literal path always works:
 
 ```bash
-python devtools/checks/check-commit-msg.py <msg-file> && git commit -F <msg-file>
+python devtools/checks/check-commit-msg.py <msg-file>
+git commit -F <msg-file>
 ```
+
+Two commands, the second only when the first passes.
 
 A refusal names the rule; fix the message and check again. No heredoc. If a **git hook** (`.githooks/pre-commit`) fails, fix what it names and
 commit again — never `--no-verify`. A **guard** refusal is different: report it and stop

@@ -7,6 +7,8 @@ description: >
   the API token. Before a PR exists, use book:self-review. Formerly /review-pr.
 ---
 
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
+
 Review the current pull request and **post the findings to it**.
 
 > **`/book:self-review` and `/book:peer-review` are not the same thing.** `/book:self-review`
@@ -59,7 +61,7 @@ through *substance*, not ownership:
 - **A reply** to a thread is the user's to post.
 
 **4. Never print, log or write the API token, even masked, nor ask for or accept one**
-([CLAUDE.md, *Private settings*](CLAUDE.md#private-settings); [Credentials](#credentials)).
+(CLAUDE.md, *Private settings*; [Credentials](#credentials)).
 
 **5. Do not post a finding you have not verified in the code.** A false positive
 on a PR costs a reviewer more than a missed finding, because it is public and
@@ -129,7 +131,7 @@ Before reading the diff:
   [scope-triage table](references/review-method.md#how-to-use-this-framework): it names the
   affected features, the dimensions to press and what to read.
 - Read the plan section in `docs/plans/` for each affected feature, and the part
-  of [`docs/architecture.md`](docs/architecture.md) the triage points at
+  of `docs/architecture.md` the triage points at
   — not the whole guide. These reads are independent: make them together.
 - Find a comparable existing implementation to compare against — this codebase has
   strong conventions, and the nearest sibling feature is usually the standard the
@@ -177,7 +179,7 @@ Severity is assigned per [Severity](references/review-method.md#severity) — CR
 **Verify each finding before it becomes a finding**, per
 [Before a finding is reported](references/review-method.md#before-a-finding-is-reported) — this codebase records
 most of its deliberate oddities in
-[Known trade-offs](docs/architecture.md#known-trade-offs).
+*Known trade-offs* (the project's `docs/architecture.md`).
 
 ### Step 4 — Show the plan and ask
 

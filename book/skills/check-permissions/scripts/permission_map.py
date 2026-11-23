@@ -8,7 +8,12 @@ catalogue (authorization §2) and the generated API contracts, set against each 
 
 It reads three files and writes nothing:
 
-- **The plan's catalogue** — the `| `module` | `action`, ... |` rows of section 2 of the plan.
+- **The plan's catalogue** — the tables of section 2 of the plan, in either shape: one module per row
+  (`| `module` | `action`, ... |`), or one permission per row with role columns
+  (`| `module.action` | A | B |`, or the permission in a later cell). In the second shape a cell may
+  shorten its siblings (`` `labs.create` / `.edit` ``), list alternatives (`` `certs.<a\\|b>.view` ``) or
+  copy a module (`` `places.*` | identical to sites ``). Text after an em dash in a cell is a note and is
+  not read. Names may have more than one dot (`inventory.bins.read`).
 - **The code's catalogue** — every `const string X = "module.action"` in the catalogue file. The file is the
   one the contracts name ("the catalogue is `<path>`"), or --catalogue.
 - **The contracts** — each route's Auth column: `anonymous`, `authenticated`, or the permission(s) its
@@ -16,7 +21,7 @@ It reads three files and writes nothing:
 
 It prints the differences, the module → action → routes map, and the routes no permission gates, for the
 skill to judge against the FSD. Exit 0 when it ran (findings or none), 2 when the plan or the catalogue
-cannot be read. Standard library only.
+cannot be read or section 2 yields no permission. Standard library only.
 """
 from __future__ import annotations
 
@@ -26,13 +31,19 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-PERMISSION = r"[a-z0-9_]+\.[a-z0-9_]+"
-PLAN_ROW = re.compile(r"^\|\s*`([a-z0-9_]+)`\s*\|(.+?)\|\s*$", re.M)
+PERMISSION = r"[a-z0-9_]+(?:\.[a-z0-9_]+)+"
+WHOLE_PERMISSION = re.compile(PERMISSION)
+NOT_PERMISSIONS = {"md", "cs", "json", "py", "ts", "js", "yml", "yaml", "toml", "txt", "csv", "pdf", "html", "sql",
+                   "xml", "ps1", "sh"}
 CONSTANT = re.compile(r'const\s+string\s+\w+\s*=\s*"(' + PERMISSION + r')"')
 CATALOGUE_NAMED = re.compile(r"catalogue is\s+`([^`]+)`")
 ROUTE = re.compile(r"^\|\s*(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\s*\|\s*`([^`]+)`\s*\|([^|]*)\|.*\|\s*`?([\w—-]+)`?\s*\|\s*$",
                    re.M)
 COUNTS = re.compile(r"(\d+) anonymous, (\d+) authenticated-only, (\d+) permission-gated")
+CELL_SPLIT = re.compile(r"(?<!\\)\|")
+TICKED = re.compile(r"`([^`]+)`")
+ALTERNATIVES = re.compile(r"<([^<>]+)>")
+IDENTICAL = re.compile(r"identical to\s+`?([a-z0-9_.]+?)`?(?:[*_\s.,;]|$)")
 
 
 def plan_section_2(text: str) -> str:
@@ -40,10 +51,57 @@ def plan_section_2(text: str) -> str:
     return match.group(1) if match else ""
 
 
+def _expand(token: str) -> list[str]:
+    """`certs.<a|b>.view` → certs.a.view, certs.b.view."""
+    match = ALTERNATIVES.search(token)
+    if not match:
+        return [token]
+    options = [o.strip() for o in match.group(1).replace("\\|", "|").split("|") if o.strip()]
+    return [e for o in options for e in _expand(token[:match.start()] + o + token[match.end():])]
+
+
+def _is_permission(name: str) -> bool:
+    return bool(WHOLE_PERMISSION.fullmatch(name)) and name.rsplit(".", 1)[1] not in NOT_PERMISSIONS
+
+
+def _cells(row: str) -> list[str]:
+    """A table row's cells, split on unescaped pipes, each cut at its first em dash (what follows is a note)."""
+    cells = [c.strip() for c in CELL_SPLIT.split(row.strip().strip("|"))]
+    return [c.split("—", 1)[0] for c in cells]
+
+
 def plan_permissions(text: str) -> set[str]:
-    found = set()
-    for module, actions in PLAN_ROW.findall(plan_section_2(text)):
-        found |= {f"{module}.{action}" for action in re.findall(r"`([a-z0-9_]+)`", actions)}
+    found: set[str] = set()
+    aliases: list[tuple[str, str]] = []
+    for row in plan_section_2(text).splitlines():
+        if not row.lstrip().startswith("|") or re.fullmatch(r"[\s|:\-]+", row):
+            continue
+        whole_row = row
+        cells = _cells(row)
+        first = TICKED.fullmatch(cells[0]) if cells else None
+        if first and re.fullmatch(r"[a-z0-9_]+", first.group(1)) and len(cells) > 1:
+            # One module per row: | `module` | `action`, `action` |
+            found |= {f"{first.group(1)}.{a}" for a in TICKED.findall(cells[1]) if re.fullmatch(r"[a-z0-9_]+", a)}
+            continue
+        # One permission per row, in any cell, the others being role columns or notes.
+        for cell in cells:
+            last: list[str] = []
+            for token in TICKED.findall(cell):
+                token = token.strip()
+                if token.startswith(".") and last and re.fullmatch(r"\.[a-z0-9_]+", token):
+                    last = [p.rsplit(".", 1)[0] + token for p in last]
+                    found |= set(last)
+                elif token.endswith(".*") and _is_permission(token[:-2] + ".x"):
+                    source = IDENTICAL.search(whole_row)
+                    if source:
+                        aliases.append((token[:-2], source.group(1)))
+                else:
+                    expanded = [t for t in _expand(token) if _is_permission(t)]
+                    if expanded:
+                        last = expanded
+                        found |= set(expanded)
+    for alias, source in aliases:
+        found |= {alias + p[len(source):] for p in list(found) if p.startswith(source + ".")}
     return found
 
 
@@ -65,7 +123,8 @@ def report(root: Path, plan: Path, contracts: Path, catalogue: Path | None) -> t
         return [f"BLOCKED: no plan at {plan} — the Book keeps the permission catalogue in authorization §2"], 2
     planned = plan_permissions(plan_file.read_text(encoding="utf-8-sig"))
     if not planned:
-        lines.append(f"NOTE: no `module` | `action` rows found in section 2 of {plan}")
+        return [f"BLOCKED: section 2 of {plan.as_posix()} yields no permission — neither `| `module` | `action`, "
+                "... |` rows nor one `module.action` per row; read the plan and fix the table or this script"], 2
     contracts_file = root / contracts
     contracts_text = contracts_file.read_text(encoding="utf-8-sig") if contracts_file.is_file() else ""
     if catalogue is None and contracts_text:
@@ -105,11 +164,11 @@ def report(root: Path, plan: Path, contracts: Path, catalogue: Path | None) -> t
     lines += ["", "## 3. Module → action → routes"]
     modules: dict[str, list[str]] = defaultdict(list)
     for permission in sorted(coded | set(used)):
-        modules[permission.split(".")[0]].append(permission)
+        modules[permission.rsplit(".", 1)[0]].append(permission)
     for module, permissions in modules.items():
         lines.append(f"- {module}")
         for permission in permissions:
-            lines.append(f"  - {permission.split('.', 1)[1]}: " + ("; ".join(used.get(permission, [])) or "no route"))
+            lines.append(f"  - {permission.rsplit('.', 1)[1]}: " + ("; ".join(used.get(permission, [])) or "no route"))
 
     for kind, title in (("authenticated", "Routes any signed-in user may call (no permission)"),
                         ("anonymous", "Anonymous routes")):

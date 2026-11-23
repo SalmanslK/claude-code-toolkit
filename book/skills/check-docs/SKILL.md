@@ -5,7 +5,7 @@ description: >
   after a run of merges, or when a branch that changed docs/ is about to open its PR. Audits both ways,
   reports with evidence and stops for approval. Not for refreshing docs from code already trusted
   (book:update-docs), nor docs against each other (book:check-consistency). Formerly /docs-vs-code.
-allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git ls-files*), Bash(git show*), Bash(git grep*), Bash(pdftotext *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/test-trend.py*), Bash(python devtools/checks/test-trend.py*), Bash(python3 devtools/checks/gen-api-contracts.py --check*), Bash(python devtools/checks/gen-api-contracts.py --check*)
+allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git ls-files*), Bash(git show*), Bash(git grep*), Bash(pdftotext *), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/test-trend.py*), Bash(python devtools/checks/test-trend.py*), Bash(python3 devtools/checks/gen-api-contracts.py --check*), Bash(python devtools/checks/gen-api-contracts.py --check*), Bash(git fetch*), Bash(dotnet build*), Bash(dotnet test*)
 ---
 
 You are auditing whether this repository's **code and its documentation agree**.
@@ -42,7 +42,7 @@ wrong, and say so with evidence.
 | `README.md`, `devtools/README.md`, `database-scripts/README.md` | how to run it |
 | XML doc comments and inline comments | they make claims too, and they go stale |
 
-**`requirements/`** is [read-only](CLAUDE.md#layout): evidence in this audit, often the
+**`requirements/`** is *read-only* (the project's `CLAUDE.md`): evidence in this audit, often the
 deciding evidence. If the code contradicts the FSD, the finding is against the code or
 against a question in `docs/open-questions.md`, never against the PDF.
 
@@ -115,7 +115,7 @@ In this order. When a higher source contradicts a lower one, **say so** rather t
 quietly picking a winner.
 
 1. **The FSD.** It wins every conflict; where it is silent or contradicts itself,
-   [Which document wins](docs/open-questions.md#which-document-wins) says what
+   *Which document wins* (the project's `docs/open-questions.md`) says what
    decides.
 2. **Answered questions in `docs/open-questions.md`.** An answer with a date settles the
    matter and outranks any design written before it.
@@ -186,7 +186,7 @@ touching behaviour, contracts, schema or a business rule waits for approval.
 ## Phase 7 — Apply what is approved
 
 **Where the edits go.** Code changes go on a work branch; doc changes as
-[docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on) says — check the branch before the first edit.
+docs/CLAUDE.md, *Which branch a doc change goes on* says — check the branch before the first edit.
 
 **Code changes** keep the existing architecture, CQRS shape, domain boundaries and
 database integrity. Update or add tests in the same commit.
@@ -194,8 +194,8 @@ database integrity. Update or add tests in the same commit.
 **Documentation changes** describe only what the code, schema, contracts, tests and
 configuration actually do. Do not write intent as though it were behaviour.
 
-The house rules bind it: [one topic, one owner](CLAUDE.md#where-knowledge-lives),
-[no new file](docs/CLAUDE.md#new-files), [a question to `open-questions.md`](CLAUDE.md#features).
+The house rules bind it: *one topic, one owner* (the project's `CLAUDE.md`),
+*no new file* (the project's `docs/CLAUDE.md`), *a question to `open-questions.md`* (the project's `CLAUDE.md`).
 
 Afterwards, verify in proportion to what changed, and report the numbers rather
 than asserting success:
@@ -203,7 +203,7 @@ than asserting success:
 - **Always:** `python3 devtools/checks/check-book.py`.
 - **A `.cs` file changed** (a comment included): `dotnet build`.
 - **Code behaviour changed:** the tests CLAUDE.md's
-  [Building and testing](CLAUDE.md#building-and-testing) names for it —
+  *Building and testing* (the project's `CLAUDE.md`) names for it —
   the touched feature's, or the full suite when the change is cross-cutting.
 
 Docs-only changes need no test run.
@@ -224,6 +224,6 @@ entire value of the exercise.
 
 - Approved Type A findings: each code fix on its own work branch, with its `defects.md` row.
 - Approved doc fixes outside a work branch: commit them on the `chore/docs-<slug>` branch;
-  its pull request opens only when the person asks ([CLAUDE.md, *Git*](CLAUDE.md#git)).
+  its pull request opens only when the person asks (CLAUDE.md, *Git*).
 - An FE guide changed: `/book:publish-guides`. Requirement text in doubt: `/book:check-sources`.
 - **In a flow** (`/book:flow`): `docs-health` → `/book:update-docs`; `qa-build` → `/book:check-guides`.

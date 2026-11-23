@@ -15,6 +15,9 @@ extractions keep them, corroborate):
 for f in "$OLD" "$NEW"; do echo "pages $(pdftotext -raw "$f" - | tr -cd '\f' | wc -c)"; pdftotext -raw "$f" - | wc -lc; done
 ```
 
+A headless run in the default mode refuses this loop: run it in an interactive session, or with
+`pdftotext`, `tr` and `wc` allowed (the plugin's README, *Headless runs*).
+
 Every count matching means that source almost certainly has not moved — say so and go on. **`-raw`,
 not `-layout`**, when comparing: `-raw` keeps reading order; `-layout` scrambles merged table cells.
 

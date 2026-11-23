@@ -5,7 +5,7 @@ description: >
   this build". Drafts docs/release-notes/qa-build-<n>.md from what merged since the last QA build:
   features, fixed defects, known gaps, FE changes and what to test; writes it on approval. Not for one
   person's summary (/book:write-for).
-allowed-tools: Read, Grep, Glob, Write(docs/release-notes/**), Edit(docs/release-notes/**), Bash(git log*), Bash(git show*), Bash(git diff*), Bash(git tag*), Bash(git ls-files*), Bash(git fetch*), Bash(git rev-parse*), Bash(git branch*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/check-book.py*)
+allowed-tools: Read, Grep, Glob, Write(docs/release-notes/**), Edit(docs/release-notes/**), Bash(git log*), Bash(git show*), Bash(git diff*), Bash(git tag -l*), Bash(git tag --list*), Bash(git ls-files*), Bash(git fetch*), Bash(git rev-parse*), Bash(git branch*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/check-book.py*)
 ---
 
 You are writing **one QA build's release notes**: a dated snapshot of what that build delivered, for QA

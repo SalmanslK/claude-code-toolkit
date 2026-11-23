@@ -20,7 +20,7 @@ is never evidence.
 
 **Dev takes no commits.** `CLAUDE.md`: `dev` requires a pull request. This skill works on a branch
 cut from `origin/dev`, and its pull request into `dev` opens only when the person asks
-([CLAUDE.md, *Git*](CLAUDE.md#git)).
+(CLAUDE.md, *Git*).
 
 ---
 
@@ -32,7 +32,7 @@ cut from `origin/dev`, and its pull request into `dev` opens only when the perso
    so.** Never stash or carry it.
 2. `git fetch origin`, then
    `git checkout --no-track -b chore/docs-project-progress-<YYYY-MM-DD> origin/dev` — a general
-   refresh, so `chore/docs-<slug>` ([docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on)).
+   refresh, so `chore/docs-<slug>` (docs/CLAUDE.md, *Which branch a doc change goes on*).
    **`--no-track`**, so a push cannot land on `dev`. Check with `git branch -vv`.
 
 ### 2. Read the evidence

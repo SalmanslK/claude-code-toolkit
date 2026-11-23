@@ -5,8 +5,10 @@ description: >
   guide is wrong", before a QA build or /book:publish-guides. Checks every guide against
   the contracts, the source and the ledgers; reports each CURRENT or STALE with evidence, then stops for
   approval. Not for code against the FSD (/book:fact-check) or other docs (/book:check-docs).
-allowed-tools: Read, Grep, Glob, Bash(git show*), Bash(git log*), Bash(git grep*), Bash(git ls-tree*), Bash(git rev-list*), Bash(git rev-parse*), Bash(git diff*), Bash(git fetch*), Bash(python "${CLAUDE_SKILL_DIR}/scripts/guides_check.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/guides_check.py"*), Bash(python devtools/checks/gen-api-contracts.py --check*), Bash(python3 devtools/checks/gen-api-contracts.py --check*)
+allowed-tools: Read, Grep, Glob, Bash(git show*), Bash(git log*), Bash(git grep*), Bash(git ls-tree*), Bash(git rev-list*), Bash(git rev-parse*), Bash(git diff*), Bash(git fetch*), Bash(python "${CLAUDE_SKILL_DIR}/scripts/guides_check.py"*), Bash(python3 "${CLAUDE_SKILL_DIR}/scripts/guides_check.py"*), Bash(python devtools/checks/gen-api-contracts.py --check*), Bash(python3 devtools/checks/gen-api-contracts.py --check*), Bash(python devtools/checks/check-book.py*), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-fe-guides.py*), Bash(python3 devtools/checks/check-fe-guides.py*), Bash(python devtools/book.py config*), Bash(python3 devtools/book.py config*)
 ---
+
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
 
 You are checking **the front-end integration guides**: the documents the FE team builds against and
 cannot check themselves, because they do not read this repository.
@@ -88,7 +90,8 @@ And once, for all guides:
 - **`C-UNPARSED`**: a route registration in a source file no contracts row names. Every route check is
   blind to it. `not checked` means `[fe_guides] route_calls` is unset for this stack: say so.
 - **`E-UNNAMED`**: error codes the source returns that no guide names, less `[fe_guides]
-  internal_error_codes` in `devtools/factory/factory.toml` (codes no route can return, each with a reason).
+  internal_error_codes` in the settings (`python devtools/book.py config --json`, from Book 1.6: `factory.toml`
+  over the Book's defaults; codes no route can return, each with a reason).
   A stale entry there (it matches no code) is listed too.
 - **Response fields:** whether the contracts carry *Response schemas*. Without them, sample the response
   shapes in Step 2 and say they were sampled, not checked.
@@ -97,7 +100,7 @@ And once, for all guides:
 
 Run it from the project's root: the script is the plugin's, the project is the current directory's git top
 level. **Exit 2 means it could not check** (a missing file or ledger heading, a malformed setting, `source_files`
-that match nothing, a git failure). Settings are read from `factory.toml` at the same ref as the guides. Stop and say
+that match nothing, a git failure). Settings are read at the same ref as the guides (from Book 1.6, `factory.toml` merged over the Book's defaults by the project's `book_config.py`). Stop and say
 so; never report a guide CURRENT from a run that did not finish.
 
 ## Step 2 — Read what it flagged, and the behaviour

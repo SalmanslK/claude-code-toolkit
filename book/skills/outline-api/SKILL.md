@@ -15,7 +15,7 @@ drawn from the designer's wireframes and the FSD before the back end or the fron
 
 **The FSD decides; the wireframes find.** The designs show what each screen loads, submits and
 displays, so no endpoint is missed. But a design is evidence, never a requirement
-([Which document wins](docs/open-questions.md#which-document-wins)): a field, filter or
+(`docs/open-questions.md`, *Which document wins*): a field, filter or
 action a frame shows and the FSD does not specify becomes a **question**, not an endpoint.
 
 **Where it goes:** the module's plan, **§6 API surface** — the template's *before it is built*
@@ -38,7 +38,7 @@ as the template says.
    and every action and its rule.
 2. **The permissions** — the module's rows in
    authorization §2, drawn from the
-   FSD. No permissions matrix exists (CLAUDE.md *Layout*): rows not yet there come from the FSD's
+   FSD (and the permissions matrix, if `requirements/read-me.txt` lists one): rows not yet there come from the FSD's
    permission sections, added as authorization §3
    says; where the FSD names none, it is a question.
 3. **The wireframes** — the module's frames in the highest `requirements/wireframes/wireframes-V<n>/`.
@@ -102,7 +102,7 @@ For each endpoint, write:
 - **Write the generated `api-contracts.md`**, or change anything under `requirements/`.
 - **Draw a second lookup** for data an existing one serves.
 - **Carry on past a source it could not read** (an FSD section, a wireframe) — say what was
-  blocked and stop ([CLAUDE.md, *Blocked means stop*](CLAUDE.md#how-these-instructions-are-organised)).
+  blocked and stop (CLAUDE.md, *Blocked means stop*).
 
 ## What next
 

@@ -11,6 +11,8 @@ allowed-tools: Read, Glob, Grep
 
 # /book:flow [name] — the Book's recipes, one step at a time
 
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
+
 A **flow** is a ready-made recipe for a common situation: which skills run, in what order, where to loop
 and where a person decides. Each recipe is a short file in `${CLAUDE_SKILL_DIR}/flows/<name>.md`. The
 skills it names stay the only owners of their rules; this skill holds only the order, the loops and the
@@ -58,6 +60,10 @@ the request is plain words ("the BA answered our questions"), name the flow that
 5. **"What is left" stays in the Book.** Keep no task list of your own; `/book:progress` updates the
    plans and `project.md`.
 6. **Heavy runs one at a time.** `/book:ship` runs the local CI; never start a second full run beside it.
+7. **Headless (`claude -p`).** Default mode refuses a chained or piped shell command (`&&`, `|`, `$(…)`, a
+   loop) that the permission rules do not allow: use Grep and Glob and one command per call, and where a
+   step needs a pipe, say it needs an interactive session or those commands allowed (the plugin's
+   README, *Headless runs*).
 
 ## The resume prompt
 

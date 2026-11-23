@@ -7,10 +7,9 @@ description: >
   this turn. Never on a protected branch; never approves, merges or declines.
 ---
 
-Takes a reviewed work branch to an opened pull request. The rules are
-[CLAUDE.md, *Git*](CLAUDE.md#git), *Jira* (where the project has one) and
-[*Building and testing*](CLAUDE.md#building-and-testing); the tools are in
-[devtools, `factory/`](devtools/README.md#factory--the-book-cli). This skill
+Takes a reviewed work branch to an opened pull request. The rules are the project's
+`CLAUDE.md`, sections *Git*, *Jira* (where the project has one) and *Building and testing*; the
+tools are in the project's `devtools/README.md`. This skill
 does not restate them — it runs them in order and stops at the first that fails.
 
 *The Book's command is `book`: `python devtools/book.py <command>` from the project's root.*
@@ -28,8 +27,11 @@ must print nothing — uncommitted work is not what was reviewed; send the perso
 this exact commit. Read it — there is no command that prints it:
 
 ```bash
-m="$(git rev-parse --git-path factory-review-verdict)"; test -f "$m" && cat "$m"; git rev-parse HEAD
+git rev-parse --git-path factory-review-verdict
+git rev-parse HEAD
 ```
+
+The first prints the verdict file's path: Read it (no file means no verdict).
 
 The first word is the verdict, the second the commit it was given for. **READY for
 the HEAD sha** → Step 2. Anything else — no file, NOT-READY, or another commit —
@@ -43,7 +45,7 @@ sh devtools/checks/ci-local.sh
 ```
 
 It picks its own tier (`book impact --ci`) — never pass a narrower one; `--full`
-only when the person asks ([how](devtools/README.md#the-local-run)).
+only when the person asks (the project's `devtools/README.md` says how).
 It takes minutes: run it in the background and wait for it to finish.
 
 - **`LOCAL CI PASSED`** → keep the `## Local CI` section it printed, **verbatim**,

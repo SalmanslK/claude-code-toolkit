@@ -9,11 +9,11 @@ sharing pattern `book:check-docs` and `book:update-docs` already use for
 
 The checklist is in parts, so a review loads only what its change can touch: this **method**,
 [Pass A](review-pass-a.md) (always), and one file per Pass B dimension, listed under
-[Pass B](#pass-b--correctness--dimensions-212-checks-16160). **`book review-scope` names the
+[Pass B](#pass-b--correctness--dimensions-212-checks-16161). **`book review-scope` names the
 parts a change needs** — this file and Pass A always, and every Pass B file when it cannot place a
 path. A dimension not loaded is still a row in the [coverage table](#coverage-summary).
 
-Together the parts are the **internal coverage framework**: 160 named checks across 12
+Together the parts are the **internal coverage framework**: 161 named checks across 12
 review dimensions. It is not a form to fill in and not a source of findings by
 itself — **a check earns a finding only when the diff gives evidence for it.**
 Work through every applicable dimension on every review; report only what the
@@ -41,10 +41,10 @@ sections:
 | The diff touches | Press hardest on | Read | Normally N/A |
 |---|---|---|---|
 | Product code under `src/` | Pass A in full; the B dimensions of the layers touched | Each changed file in full, its nearest sibling, the plan's section for it | — |
-| An endpoint, request/response DTO or permission | B3 API, B4 Security; A3 (FE guide, `api-contracts.md`, Postman `JOURNEY`) | `src/<Name>.API/CLAUDE.md` (the dotnet pack) | — |
+| An endpoint, request/response DTO or permission | B3 API, B4 Security; A3 (FE guide, `api-contracts.md`, Postman `JOURNEY`) | the API project's `CLAUDE.md` (the dotnet pack: `src/<Name>.API/CLAUDE.md`, `<Name>` being the project's own name — find it with Glob `src/*.API/CLAUDE.md`) | — |
 | A migration | B5 Data; the idempotent-script proof | The migration's `.cs` in full; `Persistence/CLAUDE.md` (the dotnet pack) | — |
 | Tests only | B9 Testing; whether each test proves the behaviour its name claims | The tests and the code they exercise | B1–B8 unless the tests reveal a product defect |
-| Docs only (`docs/`, other `*.md`) | A2, A3: does each changed statement match the code and the FSD, in the doc that owns it | The changed sections; their owner per [Where knowledge lives](CLAUDE.md#where-knowledge-lives) | B1–B11 — say so in the coverage table |
+| Docs only (`docs/`, other `*.md`) | A2, A3: does each changed statement match the code and the FSD, in the doc that owns it | The changed sections; their owner per *Where knowledge lives* (the project's `CLAUDE.md`) | B1–B11 — say so in the coverage table |
 | Tooling (`devtools/`, `.claude/`, `.githooks/`, CI) | B2, B4 (secrets, what it can reach), B10, B11; whether the tool's own tests cover the change | The changed files in full; the tool's tests | A1 unless it changes what ships; B1, B3, B5 — they check the .NET layers, endpoints and EF Core, which tooling does not hold (a tool that generates them, such as `gen-api-contracts`, is still Tooling) |
 | A `CLAUDE.md` (root or nested) | As *Tooling*: B4, B11 — they are rules the guard and checks enforce; and A2 against the docs that own each topic | The changed sections | — |
 | `requirements/**` | Only that the read-only rule held: a new snapshot file; a tracker's current copy replaced with its predecessor added under `backup/`; a `read-me.txt` link, *Last checked* line, or standing rule that a recorded decision changed — never an edit to an existing snapshot or backup | The diff | Everything else — the client's content is not ours to review |
@@ -62,8 +62,8 @@ FSD.
 **2. Evaluate every applicable check mentally.** For each dimension the diff
 touches, run down its checks below. Most resolve instantly — "no state
 transition here", "no external call here" — and leave nothing behind. That is
-the correct, common outcome. **Evaluating 160 checks does not mean producing
-160 findings; it means not missing the one that matters because nobody
+the correct, common outcome. **Evaluating 161 checks does not mean producing
+161 findings; it means not missing the one that matters because nobody
 looked.**
 
 **3. A check becomes a finding only with evidence.** Point at the line, the
@@ -230,7 +230,7 @@ one line per dimension, covering whichever dimensions actually applied:
 | Configuration & Dependencies | N/A — no config or package changes |
 ```
 
-This is a **summary**, not the 160-item list — never paste the full framework
+This is a **summary**, not the 161-item list — never paste the full framework
 into a report or a PR comment (only into this file). Its purpose is letting
 the next reader tell "checked and clean" apart from "not applicable" apart
 from "never looked" — the same reason Pass A's conformance table records
@@ -268,14 +268,14 @@ not exist.
 
 ---
 
-## Pass B — Correctness — Dimensions 2–12 (checks 16–160)
+## Pass B — Correctness — Dimensions 2–12 (checks 16–161)
 
 Work through the dimensions below in the order that matches what the diff
 touches; read the diff, decide which can plausibly break, and press hardest
 there. **Record every dimension you didn't press on as N/A in the
 [Coverage summary](#coverage-summary) rather than leaving it unsaid.**
 
-Without a stack pack the dimensions are one stack-free file, `review-b-core.md` (B0, checks 16–161). A stack pack may split them into one file per dimension in its place (the dotnet pack's `review-b1-architecture.md` … `review-b11-configuration.md`, checks 16–160). `[review_scope.dimensions]` in `factory.toml` names the files this Book has.
+Without a stack pack the dimensions are one stack-free file, `review-b-core.md` (B0, checks 16–161). A stack pack may split them into one file per dimension in its place (the dotnet pack's `review-b1-architecture.md` … `review-b11-configuration.md`; a pack's files that stop at check 160 lack 161, *Code the requirement did not ask for*: apply it from B2 in `review-b-core.md`, beside this file). `[review_scope.dimensions]` in `factory.toml` names the files this Book has.
 
 ### Principles
 
@@ -283,8 +283,8 @@ Without a stack pack the dimensions are one stack-free file, `review-b-core.md` 
 trace the execution path. A finding raised from the diff alone is a guess.
 
 **The project's architecture is the standard, not general best practice.**
-Where [`CLAUDE.md`](CLAUDE.md),
-[`docs/architecture.md`](docs/architecture.md) or a plan in
+Where `CLAUDE.md`,
+`docs/architecture.md` or a plan in
 `docs/plans/` has already decided something, that decision wins. A pattern is
 not wrong merely because another pattern exists. **A change to product or test
 code: read `src/CLAUDE.md`, the code rules, before
@@ -308,7 +308,7 @@ Verify each one:
 - Is it already handled — middleware, a global filter, an interceptor, an
   architecture test, an existing abstraction?
 - Is it intentional per a plan, or recorded under
-  [Known trade-offs](docs/architecture.md#known-trade-offs)?
+  *Known trade-offs* (the project's `docs/architecture.md`)?
 - Does the concern apply to *this* code path, or to one that only looks like
   it?
 - Have you tagged it **New** or **Pre-existing** per

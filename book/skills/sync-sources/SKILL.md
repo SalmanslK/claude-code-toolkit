@@ -10,6 +10,8 @@ description: >
 
 # /book:sync-sources — requirements → docs → code
 
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
+
 This skill **orchestrates** the other skills of this plugin; it does not replace them. Each
 phase names the skill that owns it — load that skill and follow it. What this file adds:
 
@@ -66,16 +68,17 @@ and say which applied, in the report:
   re-base.
 - **The QA baseline is the commit deployed on the QA server**, not the `qa` branch: nothing deploys
   from `qa` yet, and the QA environment runs `dev` with the QA overlay
-  ([CLAUDE.md, *Branches*](CLAUDE.md#branches)). `sync-plan` reads it through `book deploy
+  (CLAUDE.md, *Branches*). `sync-plan` reads it through `book deploy
   status --target qa` and prints a `→ baseline:` line. *From the ledger — NOT a live read*: say so
   and ask the person to confirm it. *none* (`COULD NOT READ` and no ledger record): stop and ask;
   never fall back to the `qa` branch, which it prints for reference only.
 - **Branch.** A sync is a general refresh, so
-  [docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on)
+  docs/CLAUDE.md, *Which branch a doc change goes on*
   sends it to `dev` on a branch of its own:
   `git checkout --no-track -b chore/docs-sync-<yyyy-mm-dd> origin/dev`. If the checkout holds
   someone else's work, use a worktree and say so.
-- **Commit once per phase; push only at the end.**
+- **Commit once per phase; push only at the end.** The phase commits follow `/book:commit`'s grouping
+  and message steps without its review: the review comes once, at wrap-up, before the push (`/book:commit`, Step 1).
 - **Pick the mode** — `sync-plan` suggests one; a long gap since the last sync is your call for
   **full** — and say it in one line, with the delta file count.
 

@@ -3,7 +3,7 @@
 Part of the review checklist; its method is [`review-method.md`](review-method.md).
 
 **Runs first, on every review, however small the diff.** It asks whether the
-code does what was decided; [Pass B](review-method.md#pass-b--correctness--dimensions-212-checks-16160)
+code does what was decided; [Pass B](review-method.md#pass-b--correctness--dimensions-212-checks-16161)
 asks whether what is there is right. It covers dimension 1 of the framework
 in full.
 
@@ -39,7 +39,7 @@ requirement to the code, not from the code to the requirement:
    PR can satisfy its own section perfectly and still miss a rule that
    applies to it.
 5. **Cross-check the two documents that already track this**:
-   [`docs/qa-artifact-test-suite.md`](docs/qa-artifact-test-suite.md)
+   `docs/qa-artifact-test-suite.md`
    for what QA will fail us on, and
    `docs/api/fe-api-coverage.md`
    for endpoints the front end requires.
@@ -58,7 +58,7 @@ finding** — see [Conformance findings specifically](review-method.md#conforman
 ### A2 · Code to our docs — check 4 (part), 15
 
 Find the doc that owns the affected topic — the owners are tabled in
-[`CLAUDE.md`](CLAUDE.md#where-knowledge-lives) — and compare.
+`CLAUDE.md` — and compare.
 
 **Neither side is presumed right.** Where code and documentation disagree,
 work out which represents the intended design; where the FSD is one of the

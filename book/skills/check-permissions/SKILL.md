@@ -9,18 +9,21 @@ allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git grep*
 
 # /book:check-permissions [module | branch | all] — who may do what, three ways
 
+*`${CLAUDE_SKILL_DIR}` below is this skill's folder, the one that holds this `SKILL.md` (the base directory shown when the skill loads). If it reaches you unexpanded, write that folder's absolute path in its place; never run a command with the literal text.*
+
 **Who may do what** lives in three places, and they drift apart:
 
 1. **The FSD** — the role rules: which role may list, view, create, edit, delete, change status, approve.
-   **It wins every conflict** ([which document wins](docs/open-questions.md#which-document-wins)).
+   **It wins every conflict** (`docs/open-questions.md`, *Which document wins*).
 2. **`docs/plans/authorization.md` §2** — the permission catalogue drawn from it, the *Not
    permission-gated* list, the *Rules that are not permissions*, and §4's recorded gaps.
 3. **The code** — the catalogue (`Permissions.cs` in the dotnet pack), the permission each request
    declares, what each route therefore needs (`docs/api/api-contracts.md`, generated), the seeded roles,
    and the handlers that enforce target rules.
 
-**No permissions matrix exists, and this skill does not make one** ([CLAUDE.md, *Layout*](CLAUDE.md#layout)):
-the FSD stays the only owner of who may do what. The role × action view you build is part of the
+**This skill never makes a permissions matrix** (CLAUDE.md, *Layout*): the FSD stays the owner of
+who may do what, with the client's permissions matrix where the project has one (see
+`requirements/read-me.txt`; read its Sheet as CSV, never its PDF). The role × action view you build is part of the
 report, never a file. **You write nothing**: each gap becomes a defect, a question or a §2 fix only
 when the person approves it.
 
@@ -50,7 +53,9 @@ It reads §2, the code's catalogue and the contracts, and prints: the catalogue 
 the code), permissions declared by no route and routes declaring an unknown one, the module → action →
 routes map, and the routes **no permission gates** (any signed-in user) and the anonymous ones. Its
 counts are checked against the contracts' own count line; a **MISMATCH** means read the contracts by
-hand. **BLOCKED** (no plan, no catalogue) stops the skill there: say what is missing. A stack without
+hand. **BLOCKED** (no plan, no catalogue, or a §2 it reads no permission from) stops the skill there: say
+what is missing. It reads §2 in either shape: one module per row, or one permission per row with role
+columns. A stack without
 generated contracts gets the catalogue comparison only; say the route checks were not made.
 
 Cite its lines; do not re-derive them by reading.
@@ -101,7 +106,7 @@ silent or contradicts itself), **§2 fix** (the plan is wrong against the code a
 
 - **A defect or a question the person approves:** `/book:raise defect` or `/book:raise question`, one at
   a time; a contradiction also gets its §4 row.
-- **A §2 fix:** on a docs branch ([docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on));
+- **A §2 fix:** on a docs branch (docs/CLAUDE.md, *Which branch a doc change goes on*);
   the code changes only through a defect.
 - **Missing tests:** with the module's next change, or as a task in its plan.
 - **In a flow** (`/book:flow`): `docs-health` → `/book:trim`; `qa-build` → `/book:check-docs`.

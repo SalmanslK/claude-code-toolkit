@@ -1,6 +1,6 @@
 ---
 name: fact-check
-allowed-tools: Read, Grep, Glob, Edit(docs/Audit/**), Write(docs/Audit/**), Bash(git log*), Bash(git show*), Bash(git diff*), Bash(git grep*), Bash(git ls-files*), Bash(git rev-parse*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *)
+allowed-tools: Read, Grep, Glob, Edit(docs/Audit/**), Write(docs/Audit/**), Bash(git log*), Bash(git show*), Bash(git diff*), Bash(git grep*), Bash(git ls-files*), Bash(git rev-parse*), Bash(git fetch*), Bash(pdftotext *), Bash(ls *), Bash(python3 devtools/book.py fsd-page*), Bash(python devtools/book.py fsd-page*), Bash(diff *)
 description: >
   Use when asked whether the code matches the FSD, whether a plan captured everything it requires, or to
   build the traceability matrix under docs/Audit/ — before a release, after a module is Built. One
@@ -44,7 +44,7 @@ otherwise readable section is `UNVERIFIED` with the reason.
 | **Adjacent owners** | `docs/defects.md`, `docs/qa-artifact-test-suite.md`, `docs/api/fe-api-coverage.md`, `docs/open-questions.md` | **Reference by id; never restate or re-log** |
 
 **Where the writes go.** A standalone audit is a general refresh
-([docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on)) — check the branch before the first write.
+(docs/CLAUDE.md, *Which branch a doc change goes on*) — check the branch before the first write.
 
 **Audit a commit, not a working tree.** Record it as `origin/dev@<sha>`
 (`git rev-parse --short origin/dev`) unless told to audit another branch, and

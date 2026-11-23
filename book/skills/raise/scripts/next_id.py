@@ -17,6 +17,7 @@ exit 2: a next id read without the base could be one the base already holds.
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tomllib
@@ -72,6 +73,19 @@ def ids_in(kind: str, text: str, ledger) -> set[int]:
 
 def base_ref(root: Path) -> str:
     path = root / "devtools" / "factory" / "factory.toml"
+    loader_path = root / "devtools" / "factory" / "book_config.py"
+    if loader_path.is_file():
+        # A Book from 1.6 keeps only its own values in factory.toml; its loader merges the Book's defaults under it.
+        spec = importlib.util.spec_from_file_location("book_config", loader_path)
+        loader = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(loader)
+            config = loader.load(root)
+        except Exception as error:  # a loader that does not run cannot say where the base is
+            raise CouldNotCheck(f"the project's settings do not load ({error})") from error
+        if not config.get("base_ref"):
+            raise CouldNotCheck("the settings set no base_ref: the branch ids are taken against it")
+        return str(config["base_ref"])
     try:
         config = tomllib.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
     except tomllib.TOMLDecodeError as error:
@@ -81,14 +95,56 @@ def base_ref(root: Path) -> str:
     return str(config["base_ref"])
 
 
-def refs(root: Path, base: str) -> list[str]:
+def refs(root: Path, base: str) -> list[tuple[str, str]]:
+    """(full ref name, short name) for the base and every other branch, local or remote. Ledgers are read by the
+    full name: a short name that is also a tag's would read the tag (Book D58)."""
     if git(root, "rev-parse", "--verify", "--quiet", f"{base}^{{commit}}").returncode != 0:
         raise CouldNotCheck(f"{base} is not here: fetch it first (`git fetch`)")
+    full_base = git(root, "rev-parse", "--symbolic-full-name", base).stdout.strip() or base
     # Full names, so a remote's HEAD (`refs/remotes/origin/HEAD`, short name `origin`) is plain to skip.
     listed = git(root, "for-each-ref", "--format=%(refname)", "refs/heads", "refs/remotes")
-    short = [ref.split("/", 2)[2] for ref in listed.stdout.split() if not ref.endswith("/HEAD")]
-    others = [ref for ref in short if ref != base]
-    return [base, *others]
+    others = [(ref, ref.split("/", 2)[2]) for ref in listed.stdout.split()
+              if not ref.endswith("/HEAD") and ref != full_base]
+    return [(full_base, base), *others]
+
+
+def read_blobs(root: Path, specs: list[str]) -> dict[str, str]:
+    """{"<ref>:<path>": text} for each spec that names a file, in two git calls whatever the branch count.
+
+    One `git cat-file --batch-check` names each spec's blob; one `git cat-file --batch` reads each distinct
+    blob once. A spec that names no file is left out. (One `git show` per branch and file took minutes on a
+    repository with some hundreds of branches.)"""
+    try:
+        checked = subprocess.run(["git", "-C", str(root), "cat-file", "--batch-check=%(objectname) %(objecttype)"],
+                                 input="".join(spec + "\n" for spec in specs).encode("utf-8"), capture_output=True)
+    except OSError as error:
+        raise CouldNotCheck(f"git could not run ({error})") from error
+    if checked.returncode != 0:
+        raise CouldNotCheck("git cat-file --batch-check failed: " + checked.stderr.decode("utf-8", "replace").strip())
+    blob_of: dict[str, str] = {}
+    for spec, line in zip(specs, checked.stdout.decode("utf-8", "replace").splitlines()):
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == "blob":
+            blob_of[spec] = parts[0]
+    distinct = sorted(set(blob_of.values()))
+    if not distinct:
+        return {}
+    try:
+        batch = subprocess.run(["git", "-C", str(root), "cat-file", "--batch"],
+                               input="".join(oid + "\n" for oid in distinct).encode("ascii"), capture_output=True)
+    except OSError as error:
+        raise CouldNotCheck(f"git could not run ({error})") from error
+    if batch.returncode != 0:
+        raise CouldNotCheck("git cat-file --batch failed: " + batch.stderr.decode("utf-8", "replace").strip())
+    texts: dict[str, str] = {}
+    data, at = batch.stdout, 0
+    while at < len(data):  # each object: "<oid> <type> <size>\n<content>\n"
+        header_end = data.index(b"\n", at)
+        oid, _, size = data[at:header_end].decode("ascii").split()
+        start = header_end + 1
+        texts[oid] = data[start:start + int(size)].decode("utf-8", errors="replace")
+        at = start + int(size) + 1
+    return {spec: texts.get(oid, "") for spec, oid in blob_of.items()}
 
 
 def highest(root: Path) -> dict[str, tuple[int, str]]:
@@ -96,15 +152,36 @@ def highest(root: Path) -> dict[str, tuple[int, str]]:
     ledger = ledger_ids(root)
     base = base_ref(root)
     found = {kind: (0, base) for kind in LEDGERS}
-    sources = [(ref, lambda path, ref=ref: git(root, "show", f"{ref}:{path}").stdout) for ref in refs(root, base)]
+    branches = refs(root, base)
+    every_path = [path for paths in LEDGERS.values() for path in paths]
+    blobs = read_blobs(root, [f"{ref}:{path}" for ref, _ in branches for path in every_path])
+    sources = [(name, lambda path, ref=ref: blobs.get(f"{ref}:{path}", "")) for ref, name in branches]
     sources.append((WORKING_TREE, lambda path: (root / path).read_text(encoding="utf-8", errors="replace")
                     if (root / path).is_file() else ""))
-    for where, read in sources:
-        for kind, paths in LEDGERS.items():
-            top = max(ids_in(kind, "\n".join(read(path) for path in paths), ledger), default=0)
-            if top > found[kind][0]:
-                found[kind] = (top, where)
+    for kind, paths in LEDGERS.items():
+        texts = [(where, "\n".join(read(path) for path in paths)) for where, read in sources]
+        top = highest_in(kind, {text for _, text in texts}, ledger)
+        if top:
+            # The first source holding it, in order: the base, the branches, the working tree.
+            found[kind] = (top[0], next(where for where, text in texts if top[1].get(text) == top[0]))
     return found
+
+
+def highest_in(kind: str, texts: set[str], ledger) -> tuple[int, dict[str, int]] | None:
+    """(the highest id in any of the texts, {text: its highest} for the texts that were parsed), or None.
+
+    Parsing every branch's ledger is the slow part, so the texts are taken in order of a cheap upper bound
+    (the largest `D<n>`/`Q<n>` anywhere in them) and parsing stops once no bound can beat the best found."""
+    loose = re.compile(kind + r"(\d+)")
+    bounds = sorted(((max((int(n) for n in loose.findall(text)), default=0), text) for text in texts),
+                    key=lambda pair: pair[0], reverse=True)
+    best, parsed = 0, {}
+    for bound, text in bounds:
+        if bound < best or bound == 0:
+            break
+        parsed[text] = max(ids_in(kind, text, ledger), default=0)
+        best = max(best, parsed[text])
+    return (best, parsed) if best else None
 
 
 def main(argv: list[str] | None = None) -> int:

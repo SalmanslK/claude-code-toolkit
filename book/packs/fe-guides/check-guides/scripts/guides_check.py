@@ -40,6 +40,7 @@ CONVENTIONS = "api-conventions.md"
 CONTRACTS = "docs/api/api-contracts.md"
 COVERAGE = "docs/api/fe-api-coverage.md"
 FACTORY_TOML = "devtools/factory/factory.toml"
+BOOK_CONFIG = "devtools/factory/book_config.py"  # a Book from 1.6: the defaults merged under factory.toml
 METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS")
 # What a stack's source looks like, unless `[fe_guides]` says otherwise: the files that hold error codes and
 # route registrations, the call that registers a route, and a module's own folders ({module} is the folder
@@ -175,7 +176,18 @@ class Settings:
 
 
 def factory_config(repo: Path, ref: str) -> dict:
-    """factory.toml as it is at ref, like everything else checked; the checkout's only where ref has none."""
+    """
+    The settings as they are at ref, like everything else checked; the checkout's only where ref has none. A Book
+    from 1.6 keeps only its own values in factory.toml and the rest in the Book's defaults: its own loader,
+    devtools/factory/book_config.py, merges them. An older Book's factory.toml holds every value itself.
+    """
+    if (repo / BOOK_CONFIG).is_file():
+        loader = project_module(repo, BOOK_CONFIG, "book_config", "the Book's settings loader")
+        try:
+            merged = loader.load_at(repo, ref) if show(repo, ref, FACTORY_TOML, required=False) else None
+            return merged if merged is not None else loader.load(repo)
+        except loader.ConfigError as error:
+            raise SourceMissing(f"the settings do not load ({error})") from error
     text = show(repo, ref, FACTORY_TOML, required=False)
     if not text and (repo / FACTORY_TOML).is_file():
         text = (repo / FACTORY_TOML).read_text(encoding="utf-8")
@@ -786,6 +798,16 @@ def check(repo: Path, ref: str) -> dict:
     return report
 
 
+def commits_since_text(age: dict) -> str:
+    """The guide line's age: a count of source commits, or why none was made."""
+    since = age["commits_since_on_its_sources"]
+    if since is None:
+        return "no sources" if not age["sources"] else "no checked commit to count from"
+    if since == UNKNOWN_COMMIT:
+        return "source commits not counted"
+    return f"{since} source commits since"
+
+
 def print_report(report: dict) -> None:
     print(f"guides_check — {report['ref']} at {report['head']}; {report['routes_in_contracts']} routes in the "
           f"contracts; response fields: {report['response_fields']}")
@@ -794,7 +816,7 @@ def print_report(report: dict) -> None:
         age = g["age"]
         print(f"\n== {g['guide']}  base {', '.join(g['bases']) or '—'} · {g['table_routes']} table routes · owns "
               f"{g['owned_routes']} · last checked {age['last_checked']} ({age['commit']}), "
-              f"{age['commits_since_on_its_sources']} source commits since")
+              f"{commits_since_text(age)}")
         for item in g["findings"]:
             totals[item["kind"]] = totals.get(item["kind"], 0) + 1
             where = f":{item['line']}" if item["line"] else ""

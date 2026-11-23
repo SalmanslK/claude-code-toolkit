@@ -4,7 +4,7 @@ description: >
   Use when documents may disagree with each other: a rename, heavy doc edits, or a docs branch before its PR. Finds duplication, contradictions, terminology drift and missing links between docs, and
   reports before changing anything. Not for docs against code
   (book:check-docs) or bloat (book:trim). Formerly /docs-consistency.
-allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git ls-files*), Bash(git grep*), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*)
+allowed-tools: Read, Grep, Glob, Bash(git diff*), Bash(git log*), Bash(git ls-files*), Bash(git grep*), Bash(python3 devtools/checks/check-book.py*), Bash(python devtools/checks/check-book.py*), Bash(git branch --show-current)
 ---
 
 You are making a project's documentation **work as one system**.
@@ -22,7 +22,7 @@ everywhere else. Nothing contradicts anything. That is the whole skill:
 
 You compare **documentation against documentation**. You do not open the code to
 decide which document is right. (The sibling skills, by what each compares, are
-the AI guide's [*Which docs skill*](AI-DEVELOPMENT-GUIDE.md#which-docs-skill) table.)
+the AI guide's *Which docs skill* (the project's `AI-DEVELOPMENT-GUIDE.md`) table.)
 
 This matters because the two questions have different answers. Two documents can
 agree perfectly and both be wrong about the system — that is not yours. Two
@@ -52,7 +52,7 @@ it does not widen itself into a full pass.
 
 **Start from what is already decided and already checked:**
 
-- **CLAUDE.md's [Where knowledge lives](CLAUDE.md#where-knowledge-lives)
+- **The project's `CLAUDE.md`, its *Where knowledge lives*
   table is the canonical map.** Phase 3 reads ownership from it; it does not
   rebuild it. A document violating it is a finding; a concept it does not place is
   where Phase 3's judgement is needed.
@@ -129,7 +129,8 @@ resolved by you. Full rules: `references/contradiction-rules.md`.
 ### Phase 6 — Terminology harmonization
 
 Build the preferred-term list, the deprecated synonyms, and the acronyms, starting
-from the glossary: [`system-overview.md` §3 *Vocabulary*](docs/system-overview.md#vocabulary).
+from the glossary: the project's `docs/system-overview.md`, the section whose heading ends in
+*Vocabulary* (its number differs between projects).
 **Count each variant, don't hunt for it by reading:**
 `git grep -c -i -w "<variant>" -- docs README.md AI-DEVELOPMENT-GUIDE.md ":!docs/archive" ":!docs/Audit"`
 gives the files and the number of uses per file; open only the hits (`git grep -n`). Which
@@ -160,7 +161,7 @@ Default to **Audit** unless the invocation says otherwise.
 
 Use `templates/harmonization-report.md` for the report's shape.
 
-**Where the edits go:** [docs/CLAUDE.md, *Which branch a doc change goes on*](docs/CLAUDE.md#which-branch-a-doc-change-goes-on). Check
+**Where the edits go:** docs/CLAUDE.md, *Which branch a doc change goes on*. Check
 `git branch --show-current` before the first edit; on the wrong branch, stop and offer to cut one.
 
 In **Harmonize**, before any structural change — merging, splitting, moving,
@@ -232,5 +233,5 @@ than a directory that quietly agrees with itself.
 - Approved items after Audit or Review: run Harmonize. Then `/book:trim`, which may
   remove copies only once this pass has named each fact's owner.
 - Edits on a `chore/docs-<slug>` branch: its pull request opens only when the person asks
-  ([CLAUDE.md, *Git*](CLAUDE.md#git)).
+  (CLAUDE.md, *Git*).
 - **In a flow** (`/book:flow`): `docs-health` → `/book:check-docs`.
